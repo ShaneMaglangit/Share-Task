@@ -1,7 +1,8 @@
-package com.shanemaglangit.sharetask
+package com.shanemaglangit.sharetask.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.shanemaglangit.sharetask.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
