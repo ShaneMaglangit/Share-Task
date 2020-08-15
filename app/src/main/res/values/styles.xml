@@ -4,6 +4,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryLight</item>
         <item name="colorOnPrimary">@color/colorPrimaryText</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="default_button">
