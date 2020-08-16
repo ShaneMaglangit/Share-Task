@@ -19,19 +19,16 @@
         app:tabTextColor="@color/colorPrimaryText">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_item_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tab_item_all_text" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_item_personal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tab_item_personal_text" />
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_item_group"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tab_item_group_text" />
@@ -39,7 +36,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_tasks"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +48,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+        android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_plus"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

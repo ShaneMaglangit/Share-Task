@@ -24,7 +24,7 @@
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/colorPrimaryText"
-        app:layout_constraintBottom_toTopOf="@+id/text_description"
+        app:layout_constraintBottom_toTopOf="@+id/text_subject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/image_thumbnail"
@@ -33,7 +33,7 @@
         tools:text="Nodes Reflection" />
 
     <TextView
-        android:id="@+id/text_description"
+        android:id="@+id/text_subject"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:singleLine="true"
@@ -49,8 +49,10 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:max="10"
+        android:progress="5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/text_description"
-        app:layout_constraintTop_toBottomOf="@+id/text_description" />
+        app:layout_constraintStart_toStartOf="@+id/text_subject"
+        app:layout_constraintTop_toBottomOf="@+id/text_subject" />
 </androidx.constraintlayout.widget.ConstraintLayout>

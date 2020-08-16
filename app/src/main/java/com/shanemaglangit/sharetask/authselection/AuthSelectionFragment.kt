@@ -1,6 +1,5 @@
 package com.shanemaglangit.sharetask.authselection
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +11,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentAuthSelectionBinding
-import com.shanemaglangit.sharetask.util.startMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -21,7 +19,6 @@ class AuthSelectionFragment : Fragment() {
     private lateinit var binding: FragmentAuthSelectionBinding
 
     @Inject lateinit var firebaseAuth: FirebaseAuth
-    @Inject lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +48,6 @@ class AuthSelectionFragment : Fragment() {
             findNavController().navigate(R.id.action_authSelectionFragment_to_signInFragment)
         }
 
-        binding.buttonAnonymous.setOnClickListener {
-            firebaseAuth.signInAnonymously()
-            requireActivity().startMainActivity(sharedPreferences)
-        }
     }
 
     private fun loadIntroItems(): List<IntroItem> {

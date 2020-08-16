@@ -8,23 +8,22 @@
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager_intro"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/tab_intro"
-        app:layout_constraintEnd_toEndOf="@+id/tab_intro"
-        app:layout_constraintStart_toStartOf="@+id/tab_intro"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_intro"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="72dp"
         app:layout_constraintBottom_toTopOf="@+id/button_signin"
-        app:layout_constraintEnd_toEndOf="@+id/button_signin"
-        app:layout_constraintStart_toStartOf="@+id/button_signin"
+        app:layout_constraintEnd_toEndOf="@+id/view_pager_intro"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_pager_intro"
         app:tabBackground="@drawable/selector_dot_indicator"
         app:tabGravity="center"
@@ -34,31 +33,18 @@
         android:id="@+id/button_signin"
         style="@style/default_button"
         android:text="@string/sign_in_text"
-        app:layout_constraintBottom_toTopOf="@+id/button_anonymous"
-        app:layout_constraintEnd_toEndOf="@+id/button_anonymous"
-        app:layout_constraintStart_toStartOf="@+id/button_anonymous"
+        app:layout_constraintBottom_toTopOf="@+id/button_signup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_intro" />
 
     <Button
-        android:id="@+id/button_anonymous"
-        style="@style/dark_button"
-        android:text="@string/anonymous_sign_in_text"
-        app:layout_constraintBottom_toTopOf="@+id/button_signup"
-        app:layout_constraintEnd_toEndOf="@+id/button_signup"
-        app:layout_constraintStart_toStartOf="@+id/button_signup"
-        app:layout_constraintTop_toBottomOf="@+id/button_signin" />
-
-    <Button
         android:id="@+id/button_signup"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="411dp"
-        android:layout_height="wrap_content"
-        android:padding="12dp"
+        style="@style/dark_button"
         android:text="@string/sign_up_text"
-        android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_anonymous" />
+        app:layout_constraintTop_toBottomOf="@+id/button_signin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
