@@ -129,12 +129,9 @@
 
         <Button
             android:id="@+id/button_signin"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_in_alt_text"
-            android:textColor="@color/colorPrimaryText"
+            style="@style/text_button"
             android:onClick="@{() -> viewModel.navigateToSignIn()}"
+            android:text="@string/sign_in_alt_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

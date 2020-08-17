@@ -7,8 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
+import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
@@ -35,17 +37,17 @@ class ListFragment : Fragment() {
 
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
-                    viewModel.filterList(tab.position)
+                    taskAdapter.submitList(viewModel.taskList.value, tab.position)
                 }
             }
         })
 
-        viewModel.taskList.observe(viewLifecycleOwner, Observer {
-            viewModel.filterList(binding.tabGroup.selectedTabPosition)
-        })
+        binding.fabAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_listFragment_to_newTaskFragment)
+        }
 
-        viewModel.filteredTaskList.observe(viewLifecycleOwner, Observer {
-            taskAdapter.submitList(it)
+        viewModel.taskList.observe(viewLifecycleOwner, Observer {
+            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
         })
 
         return binding.root

@@ -24,12 +24,23 @@ class TaskAdapter(val taskListener: TaskListener) :
         return ViewHolder.from(parent)
     }
 
+    fun submitList(list: List<Task>?, filterButtonId: Int) {
+        super.submitList(list?.filter {
+            when (filterButtonId) {
+                1 -> !it.group
+                2 -> it.group
+                else -> true
+            }
+        })
+    }
+
     class ViewHolder private constructor(val binding: TaskItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Task, taskListener: TaskListener) {
             binding.textTitle.text = item.title
             binding.textSubject.text = item.subject
+            binding.progressTask.progress = item.progress
             binding.root.setOnClickListener { taskListener.onClick(item) }
         }
 

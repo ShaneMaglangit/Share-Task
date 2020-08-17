@@ -18,6 +18,14 @@
     <string name="tab_item_personal_text">Personal</string>
     <string name="tab_item_group_text">Group</string>
 
+    <string name="label_thumbnail">Thumbnail Color</string>
+    <string name="label_title">Title</string>
+    <string name="label_subject">Subject</string>
+    <string name="label_description">Description</string>
+    <string name="label_type">Type</string>
+    <string name="label_personal">Personal</string>
+    <string name="label_group">Group</string>
+
     <string-array name="intro_images">
         <item>ic_placeholder</item>
         <item>ic_placeholder</item>

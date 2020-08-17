@@ -87,12 +87,9 @@
 
         <Button
             android:id="@+id/button_signup"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/sign_up_text"
-            android:textColor="@color/colorPrimaryText"
+            style="@style/text_button"
             android:onClick="@{() -> viewModel.navigateToSignUp()}"
+            android:text="@string/sign_up_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

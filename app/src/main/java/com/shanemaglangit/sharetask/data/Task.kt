@@ -1,5 +1,6 @@
 package com.shanemaglangit.sharetask.data
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
 
@@ -10,6 +11,8 @@ data class Task(
     var subject: String = "",
     var description: String = "",
     var group: Boolean = false,
-    var checkboxes: List<Checkbox> = mutableListOf(),
-    var members: HashMap<String, Boolean> = HashMap()
+    var progress: Int = 0,
+    var checkboxes: List<String> = mutableListOf(),
+    var members: HashMap<String, String> = HashMap(),
+    var dateUpdated: Timestamp = Timestamp.now()
 )

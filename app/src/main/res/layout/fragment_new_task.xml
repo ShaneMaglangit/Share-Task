@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.shanemaglangit.sharetask.newtask.NewTaskViewModel" />
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/text_thumbnail"
+                    style="@style/label_style"
+                    android:text="@string/label_thumbnail" />
+
+                <TextView
+                    android:id="@+id/text_title"
+                    style="@style/label_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_title" />
+
+                <EditText
+                    android:id="@+id/edit_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="@={viewModel.title}" />
+
+                <TextView
+                    android:id="@+id/text_subject"
+                    style="@style/label_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_subject" />
+
+                <EditText
+                    android:id="@+id/edit_subject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:text="@={viewModel.subject}" />
+
+                <TextView
+                    android:id="@+id/text_description"
+                    style="@style/label_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_description" />
+
+                <EditText
+                    android:id="@+id/edit_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:minLines="5"
+                    android:text="@={viewModel.description}" />
+
+                <TextView
+                    android:id="@+id/text_type"
+                    style="@style/label_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_type" />
+
+                <RadioGroup
+                    android:id="@+id/radio_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:checked="@{viewModel.type}">
+
+                    <RadioButton
+                        android:id="@+id/radio_button_personal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_personal" />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_group"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_group" />
+
+                </RadioGroup>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:onClick="@{() -> viewModel.saveTask()}"
+            android:src="@drawable/ic_check" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

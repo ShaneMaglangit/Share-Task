@@ -9,10 +9,22 @@
         android:id="@+id/listFragment"
         android:name="com.shanemaglangit.sharetask.list.ListFragment"
         android:label="fragment_list"
-        tools:layout="@layout/fragment_list" />
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_listFragment_to_newTaskFragment"
+            app:destination="@id/newTaskFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.shanemaglangit.sharetask.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/newTaskFragment"
+        android:name="com.shanemaglangit.sharetask.newtask.NewTaskFragment"
+        android:label="NewTaskFragment">
+        <action
+            android:id="@+id/action_newTaskFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
 </navigation>

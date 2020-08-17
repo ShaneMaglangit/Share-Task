@@ -5,10 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.shanemaglangit.sharetask.R
+import com.shanemaglangit.sharetask.data.User
 
-class SignUpViewModel @ViewModelInject constructor(private val firebaseAuth: FirebaseAuth) :
-    ViewModel() {
+class SignUpViewModel @ViewModelInject constructor(
+    private val firebaseAuth: FirebaseAuth,
+    private val firebaseFirestore: FirebaseFirestore
+) : ViewModel() {
+
     private val _navigationAction = MutableLiveData<Int>()
     val navigationAction: LiveData<Int>
         get() = _navigationAction
@@ -51,10 +56,11 @@ class SignUpViewModel @ViewModelInject constructor(private val firebaseAuth: Fir
                             displayName = username.value
                         }.build()
 
+                        val user = User(username.value!!)
+                        createUserDocument(it.user!!.uid, user)
+
                         it.user!!.updateProfile(userProfileChangeRequest)
                         it.user!!.sendEmailVerification()
-
-                        _signedIn.value = true
                     }
                     .addOnFailureListener {
                         when (it) {
@@ -69,11 +75,18 @@ class SignUpViewModel @ViewModelInject constructor(private val firebaseAuth: Fir
         }
     }
 
-    private fun checkFieldsComplete() : Boolean {
-        if(username.value == null) _usernameError.value = "Field cannot be empty"
-        if(email.value == null) _emailError.value = "Field cannot be empty"
-        if(password.value == null) _passwordError.value = "Field cannot be empty"
-        if(confirmPassword.value == null) _confirmPasswordError.value = "Field cannot be empty"
+    private fun createUserDocument(userUid: String, user: User) {
+        firebaseFirestore.collection("/user")
+            .document(userUid)
+            .set(user)
+            .addOnSuccessListener { _signedIn.value = true }
+    }
+
+    private fun checkFieldsComplete(): Boolean {
+        if (username.value == null) _usernameError.value = "Field cannot be empty"
+        if (email.value == null) _emailError.value = "Field cannot be empty"
+        if (password.value == null) _passwordError.value = "Field cannot be empty"
+        if (confirmPassword.value == null) _confirmPasswordError.value = "Field cannot be empty"
 
         return username.value != null && email.value != null && password.value != null
     }

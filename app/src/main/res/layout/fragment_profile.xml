@@ -43,7 +43,7 @@
 
     <Button
         android:id="@+id/button_signout"
-        style="@style/default_button"
+        style="@style/text_button"
         android:text="@string/sign_out_text"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
