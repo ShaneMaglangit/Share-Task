@@ -13,6 +13,9 @@
         <action
             android:id="@+id/action_listFragment_to_newTaskFragment"
             app:destination="@id/newTaskFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -26,5 +29,13 @@
         <action
             android:id="@+id/action_newTaskFragment_to_listFragment"
             app:destination="@id/listFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.shanemaglangit.sharetask.task.TaskFragment"
+        android:label="TaskFragment">
+        <argument
+            android:name="taskId"
+            app:argType="string" />
     </fragment>
 </navigation>

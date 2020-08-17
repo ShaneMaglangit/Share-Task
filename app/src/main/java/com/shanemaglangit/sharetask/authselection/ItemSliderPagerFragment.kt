@@ -1,14 +1,10 @@
 package com.shanemaglangit.sharetask.authselection
 
-import android.app.Activity
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.shanemaglangit.sharetask.R
+import androidx.fragment.app.Fragment
 import com.shanemaglangit.sharetask.databinding.FragmentItemSliderPagerBinding
 
 class ItemSliderPagerFragment : Fragment() {
@@ -34,7 +30,7 @@ class ItemSliderPagerFragment : Fragment() {
         val args = requireArguments()
 
         binding.imageIllustration.setImageResource(args.getInt("imageId"))
-        binding.textDescription.text = args.getString("description")
+        binding.textDetails.text = args.getString("description")
 
         return binding.root
     }

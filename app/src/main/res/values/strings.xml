@@ -26,6 +26,10 @@
     <string name="label_personal">Personal</string>
     <string name="label_group">Group</string>
 
+    <string name="label_checkbox">Checkbox</string>
+    <string name="label_attached_file">Attached Files</string>
+    <string name="label_member">Members</string>
+
     <string-array name="intro_images">
         <item>ic_placeholder</item>
         <item>ic_placeholder</item>

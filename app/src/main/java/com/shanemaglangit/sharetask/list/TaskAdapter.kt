@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shanemaglangit.sharetask.data.Task
 import com.shanemaglangit.sharetask.databinding.TaskItemBinding
 
-class TaskAdapter(val taskListener: TaskListener) :
+class TaskAdapter(private val taskListener: TaskListener) :
     ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {
 
     public override fun getItem(position: Int): Task {

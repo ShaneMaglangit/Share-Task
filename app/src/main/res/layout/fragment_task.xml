@@ -1,14 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".task.TaskFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.shanemaglangit.sharetask.task.TaskViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:padding="16dp"
+        tools:ignore="ContentDescription">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.task.title}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Title of the task" />
+
+        <TextView
+            android:id="@+id/text_subject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@{viewModel.task.subject}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_title"
+            tools:text="Subject of the task" />
+
+        <TextView
+            android:id="@+id/text_details"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@{viewModel.task.description}"
+            android:textColor="@color/colorPrimaryText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_subject"
+            tools:text="This is the description of the task." />
+
+        <TextView
+            android:id="@+id/text_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_checkbox"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/button_add_checkbox"
+            app:layout_constraintEnd_toStartOf="@+id/button_add_checkbox"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_add_checkbox" />
+
+        <ImageButton
+            android:id="@+id/button_add_checkbox"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:onClick="@{() -> viewModel.addNewCheckbox()}"
+            android:src="@drawable/ic_plus"
+            android:tint="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/text_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/text_details" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:progress="@{viewModel.task.progress}"
+            app:layout_constraintEnd_toEndOf="@+id/button_add_checkbox"
+            app:layout_constraintStart_toStartOf="@+id/text_checkbox"
+            app:layout_constraintTop_toBottomOf="@+id/button_add_checkbox" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+
+        <ImageButton
+            android:id="@+id/button_add_file"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:src="@drawable/ic_plus"
+            android:tint="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/text_attached_files"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_checkbox" />
+
+        <TextView
+            android:id="@+id/text_attached_files"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_attached_file"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/button_add_file"
+            app:layout_constraintEnd_toStartOf="@+id/button_add_file"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_add_file" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_files"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_add_file" />
+
+        <TextView
+            android:id="@+id/text_member"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_member"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/button_add_member"
+            app:layout_constraintEnd_toStartOf="@+id/button_add_member"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/button_add_member" />
+
+        <ImageButton
+            android:id="@+id/button_add_member"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@null"
+            android:src="@drawable/ic_plus"
+            android:tint="@color/colorPrimaryDark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/text_member"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_files" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_members"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_add_member" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -17,19 +17,34 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
+    private lateinit var binding: FragmentListBinding
     private val viewModel: ListViewModel by viewModels()
+
+    private lateinit var taskAdapter: TaskAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentListBinding.inflate(inflater)
-        val taskAdapter = TaskAdapter(TaskListener {
+        binding = FragmentListBinding.inflate(inflater)
+
+        taskAdapter = TaskAdapter(TaskListener {
             Timber.d("${it.title} has been clicked")
+            findNavController().navigate(ListFragmentDirections.actionListFragmentToTaskFragment(it.id))
         })
 
         binding.recyclerTasks.adapter = taskAdapter
         binding.recyclerTasks.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.taskList.observe(viewLifecycleOwner, Observer {
+            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
+        })
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         binding.tabGroup.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
@@ -45,12 +60,5 @@ class ListFragment : Fragment() {
         binding.fabAdd.setOnClickListener {
             findNavController().navigate(R.id.action_listFragment_to_newTaskFragment)
         }
-
-        viewModel.taskList.observe(viewLifecycleOwner, Observer {
-            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
-        })
-
-        return binding.root
     }
-
 }

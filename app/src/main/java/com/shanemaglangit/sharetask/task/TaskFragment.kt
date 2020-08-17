@@ -4,57 +4,64 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.shanemaglangit.sharecheckbox.checkbox.CheckChangeListener
+import com.shanemaglangit.sharecheckbox.checkbox.CheckboxAdapter
 import com.shanemaglangit.sharetask.R
+import com.shanemaglangit.sharetask.databinding.FragmentTaskBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [TaskFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
 class TaskFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private lateinit var binding: FragmentTaskBinding
+    private val viewModel: TaskViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var checkboxAdapter: CheckboxAdapter
+    private lateinit var fileAdapter: CardTextAdapter
+    private lateinit var memberAdapter: CardTextAdapter
+
+    private val args: TaskFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_task, container, false)
-    }
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_task, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment TaskFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            TaskFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+        checkboxAdapter = CheckboxAdapter(CheckChangeListener { /* TODO: Something */ })
+        binding.recyclerCheckbox.adapter = checkboxAdapter
+        binding.recyclerCheckbox.layoutManager = LinearLayoutManager(requireContext())
+
+        fileAdapter = CardTextAdapter(CardTextListener { /* TODO: Something */ })
+        binding.recyclerFiles.adapter = fileAdapter
+        binding.recyclerFiles.layoutManager = LinearLayoutManager(requireContext())
+
+        memberAdapter = CardTextAdapter(CardTextListener { /* TODO: Something */ })
+        binding.recyclerMembers.adapter = memberAdapter
+        binding.recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
+
+        viewModel.loadTask(args.taskId)
+
+        viewModel.checkboxList.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                checkboxAdapter.submitList(it)
             }
+        })
+
+        viewModel.task.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                memberAdapter.submitList(it.members.toList())
+            }
+        })
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+        return binding.root
     }
 }
