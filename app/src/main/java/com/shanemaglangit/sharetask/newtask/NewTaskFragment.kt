@@ -26,6 +26,8 @@ class NewTaskFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        this.javaClass == NewTaskFragment::class.java
+
         viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 findNavController().navigate(it)

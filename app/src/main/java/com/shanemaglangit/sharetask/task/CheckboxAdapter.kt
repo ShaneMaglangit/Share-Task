@@ -1,6 +1,5 @@
 package com.shanemaglangit.sharecheckbox.checkbox
 
-import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -31,17 +30,15 @@ class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
 
         fun bind(item: Checkbox, checkChangeListener: CheckChangeListener) {
             binding.textDetails.text = item.details
+            binding.checkboxChecked.isChecked = item.checked
+
             binding.root.setOnClickListener {
                 binding.checkboxChecked.isChecked = !binding.checkboxChecked.isChecked
             }
+
             binding.checkboxChecked.setOnCheckedChangeListener { _, isChecked ->
                 item.checked = isChecked
                 checkChangeListener.checkChangeListener(item)
-
-                binding.textDetails.paintFlags = when (isChecked) {
-                    true -> binding.textDetails.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-                    false -> binding.textDetails.paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
-                }
             }
         }
 
