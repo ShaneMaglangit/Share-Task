@@ -1,4 +1,4 @@
-package com.shanemaglangit.sharetask.data
+package com.shanemaglangit.sharetask.model.data
 
 import android.os.Parcelable
 import com.google.firebase.Timestamp

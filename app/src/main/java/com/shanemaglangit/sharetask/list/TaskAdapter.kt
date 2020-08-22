@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.shanemaglangit.sharetask.data.Task
 import com.shanemaglangit.sharetask.databinding.TaskItemBinding
+import com.shanemaglangit.sharetask.model.data.Task
 
 class TaskAdapter(private val taskListener: TaskListener) :
     ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {

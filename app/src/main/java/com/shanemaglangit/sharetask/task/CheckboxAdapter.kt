@@ -1,12 +1,12 @@
-package com.shanemaglangit.sharecheckbox.checkbox
+package com.shanemaglangit.sharetask.task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.shanemaglangit.sharetask.data.Checkbox
 import com.shanemaglangit.sharetask.databinding.CheckboxItemBinding
+import com.shanemaglangit.sharetask.model.data.Checkbox
 
 
 class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
@@ -16,7 +16,7 @@ class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
         return super.getItem(position)
     }
 
-    override fun onBindViewHolder(holder: CheckboxAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, checkChangeListener)
     }

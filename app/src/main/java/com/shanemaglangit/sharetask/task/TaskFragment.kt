@@ -13,8 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.shanemaglangit.sharecheckbox.checkbox.CheckChangeListener
-import com.shanemaglangit.sharecheckbox.checkbox.CheckboxAdapter
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentTaskBinding
 import dagger.hilt.android.AndroidEntryPoint

@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shanemaglangit.sharetask.R
-import com.shanemaglangit.sharetask.data.User
+import com.shanemaglangit.sharetask.model.data.User
 
 class SignUpViewModel @ViewModelInject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -56,7 +56,8 @@ class SignUpViewModel @ViewModelInject constructor(
                             displayName = username.value
                         }.build()
 
-                        val user = User(username.value!!)
+                        val user =
+                            User(username.value!!)
                         createUserDocument(it.user!!.uid, user)
 
                         it.user!!.updateProfile(userProfileChangeRequest)

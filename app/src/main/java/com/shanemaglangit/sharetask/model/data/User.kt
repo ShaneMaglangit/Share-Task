@@ -1,4 +1,4 @@
-package com.shanemaglangit.sharetask.data
+package com.shanemaglangit.sharetask.model.data
 
 data class User(
     var username: String = "",

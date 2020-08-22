@@ -10,9 +10,9 @@ import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.shanemaglangit.sharetask.data.Checkbox
-import com.shanemaglangit.sharetask.data.Task
-import com.shanemaglangit.sharetask.data.User
+import com.shanemaglangit.sharetask.model.data.Checkbox
+import com.shanemaglangit.sharetask.model.data.Task
+import com.shanemaglangit.sharetask.model.data.User
 import timber.log.Timber
 import kotlin.math.roundToInt
 
@@ -160,7 +160,10 @@ class TaskViewModel @ViewModelInject constructor(
     }
 
     fun addNewCheckbox(checkboxText: String) {
-        val checkbox = Checkbox(details = checkboxText, dateCreated = Timestamp.now())
+        val checkbox = Checkbox(
+            details = checkboxText,
+            dateCreated = Timestamp.now()
+        )
 
         _checkboxList.value!!.add(checkbox)
 

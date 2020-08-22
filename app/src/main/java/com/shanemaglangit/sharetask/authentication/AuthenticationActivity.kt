@@ -16,9 +16,12 @@ class AuthenticationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
+    }
 
-        if (firebaseAuth.currentUser != null) {
-            startMainActivity()
-        }
+    override fun onStart() {
+        super.onStart()
+
+        // This opens the main activity if the user is already signed in.
+        if (firebaseAuth.currentUser != null) startMainActivity()
     }
 }

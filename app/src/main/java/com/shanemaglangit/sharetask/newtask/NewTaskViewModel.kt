@@ -8,8 +8,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shanemaglangit.sharetask.R
-import com.shanemaglangit.sharetask.data.Task
-import com.shanemaglangit.sharetask.data.TaskType
+import com.shanemaglangit.sharetask.model.data.Task
+import com.shanemaglangit.sharetask.model.data.TaskType
 
 class NewTaskViewModel @ViewModelInject constructor(
     private val firebaseAuth: FirebaseAuth,

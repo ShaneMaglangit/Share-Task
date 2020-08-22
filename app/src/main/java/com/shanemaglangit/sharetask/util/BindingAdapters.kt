@@ -5,7 +5,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import com.google.android.material.textfield.TextInputLayout
 import com.shanemaglangit.sharetask.R
-import com.shanemaglangit.sharetask.data.TaskType
+import com.shanemaglangit.sharetask.model.data.TaskType
 
 @BindingAdapter("error")
 fun setError(view: TextInputLayout, value: String?) {

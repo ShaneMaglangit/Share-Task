@@ -1,4 +1,4 @@
-package com.shanemaglangit.sharetask.data
+package com.shanemaglangit.sharetask.model.data
 
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
