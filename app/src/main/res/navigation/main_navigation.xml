@@ -38,4 +38,9 @@
             android:name="taskId"
             app:argType="string" />
     </fragment>
+    <activity
+        android:id="@+id/authenticationActivity"
+        android:name="com.shanemaglangit.sharetask.authentication.AuthenticationActivity"
+        android:label="activity_authentication"
+        tools:layout="@layout/activity_authentication" />
 </navigation>

@@ -7,7 +7,7 @@ import com.google.firebase.auth.FirebaseAuth
 class ProfileViewModel @ViewModelInject constructor(private val firebaseAuth: FirebaseAuth) :
     ViewModel() {
     var username = firebaseAuth.currentUser!!.displayName!!
-    var accountId = firebaseAuth.currentUser!!.uid
+    var email = firebaseAuth.currentUser!!.email
 
     fun signOut() {
         firebaseAuth.signOut()

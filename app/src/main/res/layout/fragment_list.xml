@@ -50,6 +50,7 @@
         android:layout_margin="16dp"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_plus"
+        android:onClick="@{() -> viewModel.navigateToNewTask()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

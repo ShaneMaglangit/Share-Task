@@ -11,7 +11,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentSigninBinding
-import com.shanemaglangit.sharetask.util.startMainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,14 +35,7 @@ class SignInFragment : Fragment() {
         viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
             if(it != null) {
                 findNavController().navigate(it)
-                viewModel.navigationComplete()
-            }
-        })
-
-        viewModel.signedIn.observe(viewLifecycleOwner, Observer {
-            if(it == true) {
-                requireActivity().startMainActivity()
-                viewModel.navigationComplete()
+                viewModel.completedNavigation()
             }
         })
     }

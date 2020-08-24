@@ -87,8 +87,7 @@
                     android:id="@+id/radio_type"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:checked="@{viewModel.type}">
+                    android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radio_button_personal"

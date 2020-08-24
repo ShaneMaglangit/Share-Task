@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.model.data.Task
-import com.shanemaglangit.sharetask.model.data.TaskType
 
 class NewTaskViewModel @ViewModelInject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -22,7 +21,6 @@ class NewTaskViewModel @ViewModelInject constructor(
     val title = MutableLiveData<String>()
     val subject = MutableLiveData<String>()
     val description = MutableLiveData<String>()
-    val type = MutableLiveData<TaskType>()
 
     fun saveTask() {
         val uid = firebaseAuth.currentUser!!.uid
@@ -30,8 +28,7 @@ class NewTaskViewModel @ViewModelInject constructor(
         val task = Task(
             title = title.value!!,
             subject = subject.value!!,
-            description = description.value!!,
-            group = type.value == TaskType.GROUP
+            description = description.value!!
         ).apply { members[uid] = userName }
 
         firebaseFirestore.collection("/task")

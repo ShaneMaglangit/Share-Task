@@ -10,10 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.tabs.TabLayout
-import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentListBinding
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
@@ -29,16 +27,11 @@ class ListFragment : Fragment() {
         binding = FragmentListBinding.inflate(inflater)
 
         taskAdapter = TaskAdapter(TaskListener {
-            Timber.d("${it.title} has been clicked")
             findNavController().navigate(ListFragmentDirections.actionListFragmentToTaskFragment(it.id))
         })
 
         binding.recyclerTasks.adapter = taskAdapter
         binding.recyclerTasks.layoutManager = LinearLayoutManager(requireContext())
-
-        viewModel.taskList.observe(viewLifecycleOwner, Observer {
-            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
-        })
 
         return binding.root
     }
@@ -49,16 +42,25 @@ class ListFragment : Fragment() {
         binding.tabGroup.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
                     taskAdapter.submitList(viewModel.taskList.value, tab.position)
                 }
             }
         })
+    }
 
-        binding.fabAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_newTaskFragment)
-        }
+    override fun onStart() {
+        super.onStart()
+        viewModel.taskList.observe(viewLifecycleOwner, Observer {
+            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
+        })
+
+        viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                findNavController().navigate(it)
+                viewModel.completedNavigation()
+            }
+        })
     }
 }

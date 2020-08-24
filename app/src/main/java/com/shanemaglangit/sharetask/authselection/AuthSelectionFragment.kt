@@ -43,7 +43,6 @@ class AuthSelectionFragment : Fragment() {
         binding.buttonSignin.setOnClickListener {
             findNavController().navigate(R.id.action_authSelectionFragment_to_signInFragment)
         }
-
     }
 
     private fun loadIntroItems(): List<IntroItem> {

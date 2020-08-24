@@ -12,7 +12,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.shanemaglangit.sharetask.model.data.Checkbox
 import com.shanemaglangit.sharetask.model.data.Task
-import com.shanemaglangit.sharetask.model.data.User
 import timber.log.Timber
 import kotlin.math.roundToInt
 
@@ -55,7 +54,7 @@ class TaskViewModel @ViewModelInject constructor(
                     val task = snapshot.toObject(Task::class.java)!!.apply { id = taskId }
                     _task.value = task
 
-                    listenToCheckboxes(task.checkboxes)
+//                    listenToCheckboxes(task.checkboxes)
                 }
             }
     }
@@ -119,32 +118,32 @@ class TaskViewModel @ViewModelInject constructor(
     }
 
     fun addMember(userId: String) {
-        if (!task.value!!.members.containsKey(userId)) {
-            firebaseFirestore.collection("/user")
-                .document(userId)
-                .get()
-                .addOnSuccessListener {
-                    if (it.exists()) {
-                        val newMember = it.toObject(User::class.java)
-                        _task.value!!.members[userId] = newMember!!.username
-
-                        firebaseFirestore.collection("/task")
-                            .document(_task.value!!.id)
-                            .set(_task.value!!)
-
-                        firebaseFirestore.collection("/user")
-                            .document(userId)
-                            .update("tasks", FieldValue.arrayUnion(_task.value!!.id))
-                    } else {
-                        _error.value = "User does not exists"
-                    }
-                }
-                .addOnFailureListener {
-                    _error.value = it.message
-                }
-        } else {
-            _error.value = "User is already a member"
-        }
+//        if (!task.value!!.members.containsKey(userId)) {
+//            firebaseFirestore.collection("/user")
+//                .document(userId)
+//                .get()
+//                .addOnSuccessListener {
+//                    if (it.exists()) {
+//                        val newMember = it.toObject(User::class.java)
+//                        _task.value!!.members[userId] = newMember!!.username
+//
+//                        firebaseFirestore.collection("/task")
+//                            .document(_task.value!!.id)
+//                            .set(_task.value!!)
+//
+//                        firebaseFirestore.collection("/user")
+//                            .document(userId)
+//                            .update("tasks", FieldValue.arrayUnion(_task.value!!.id))
+//                    } else {
+//                        _error.value = "User does not exists"
+//                    }
+//                }
+//                .addOnFailureListener {
+//                    _error.value = it.message
+//                }
+//        } else {
+//            _error.value = "User is already a member"
+//        }
     }
 
     fun errorShown() {
@@ -177,7 +176,7 @@ class TaskViewModel @ViewModelInject constructor(
                         _error.value = it.message
                     }
 
-                _task.value!!.checkboxes.add(it.id)
+//                _task.value!!.checkboxes.add(it.id)
             }
             .addOnFailureListener {
                 _error.value = it.message

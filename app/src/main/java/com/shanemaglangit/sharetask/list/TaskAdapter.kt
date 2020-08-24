@@ -27,8 +27,8 @@ class TaskAdapter(private val taskListener: TaskListener) :
     fun submitList(list: List<Task>?, filterButtonId: Int) {
         super.submitList(list?.filter {
             when (filterButtonId) {
-                1 -> !it.group
-                2 -> it.group
+                1 -> !it.isGroup
+                2 -> it.isGroup
                 else -> true
             }
         })

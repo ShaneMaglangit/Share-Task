@@ -13,9 +13,9 @@ data class Task(
     var title: String = "",
     var subject: String = "",
     var description: String = "",
-    var group: Boolean = false,
+    var isGroup: Boolean = false,
     var progress: Int = 0,
-    var checkboxes: MutableList<String> = mutableListOf(),
     var members: HashMap<String, String> = HashMap(),
+    var files: HashMap<String, String> = HashMap(),
     var dateUpdated: Timestamp = Timestamp.now()
 ) : Parcelable
