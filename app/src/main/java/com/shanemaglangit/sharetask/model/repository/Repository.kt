@@ -3,14 +3,11 @@ package com.shanemaglangit.sharetask.model.repository
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FieldPath
+import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.shanemaglangit.sharetask.model.data.Task
-import com.shanemaglangit.sharetask.model.data.User
+import com.shanemaglangit.sharetask.util.notifyObserver
 import dagger.hilt.android.scopes.ActivityScoped
-import timber.log.Timber
 import javax.inject.Inject
 
 @ActivityScoped
@@ -20,52 +17,63 @@ class Repository @Inject constructor(
     firebaseAuth: FirebaseAuth
 ) {
     private val userId = firebaseAuth.currentUser!!.uid
+    private val dbRef = firebaseDatabase.reference
 
-    private val _taskList = MutableLiveData<List<Task>>()
-    val taskList: LiveData<List<Task>>
+    private val _taskList = MutableLiveData<MutableList<Task>>(mutableListOf())
+    val taskList: LiveData<MutableList<Task>>
         get() = _taskList
 
-    private var taskListenerRegistration: ListenerRegistration? = null
-
     init {
-        firebaseFirestore.collection("/user").document(userId)
-            .addSnapshotListener addSnapshotListener@{ snapshot, error ->
-                if (error != null) {
-                    Timber.w("Listening to task collection failed")
-                    return@addSnapshotListener
-                } else {
-                    val user = snapshot?.toObject(User::class.java)
-                    listenToTasks(user)
+        dbRef.child("/userTask/$userId/")
+            .addChildEventListener(object : ChildEventListener {
+                override fun onCancelled(error: DatabaseError) {}
+                override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
 
-                    if (user != null)
-                    else _taskList.value = listOf()
-                }
-            }
-    }
+                override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                    if (snapshot.exists()) {
+                        val task = snapshot.getValue(Task::class.java)
 
-    private fun listenToTasks(user: User?) {
-        taskListenerRegistration?.remove()
-
-        if (user != null && user.taskIdList.isNotEmpty()) {
-            taskListenerRegistration = firebaseFirestore.collection("/task")
-                .whereIn(FieldPath.documentId(), user.taskIdList)
-                .addSnapshotListener addSnapshotListener@{ snapshot, error ->
-                    if (error != null) {
-                        Timber.w("Listening to task collection failed")
-                        return@addSnapshotListener
-                    } else {
-                        val tempTaskList = mutableListOf<Task>()
-
-                        snapshot?.forEach {
-                            tempTaskList.add(it.toObject(Task::class.java).apply { id = it.id })
+                        if (task != null) {
+                            task.id = snapshot.key!!
+                            _taskList.value!!.add(task)
+                            _taskList.notifyObserver()
                         }
-
-                        _taskList.value = listOf()
                     }
                 }
-        } else {
-            _taskList.value = listOf()
-        }
+
+                override fun onChildRemoved(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        _taskList.value!!.removeAll { it.id == snapshot.key }
+                        _taskList.notifyObserver()
+                    }
+                }
+
+                override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                    if (snapshot.exists()) {
+                        val task = snapshot.getValue(Task::class.java)
+
+                        if (task != null) {
+                            task.id = snapshot.key!!
+                            _taskList.value!!.removeAll { it.id == task.id }
+                            _taskList.value!!.add(task)
+                            _taskList.notifyObserver()
+                        }
+                    }
+                }
+            })
+    }
+
+    fun getTask(taskId: String): LiveData<Task> {
+        val task = MutableLiveData<Task>()
+
+        dbRef.child("/task/$taskId").addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {}
+            override fun onDataChange(snapshot: DataSnapshot) {
+                task.value = snapshot.getValue(Task::class.java)?.apply { id = taskId }
+            }
+        })
+
+        return task
     }
 
 //    fun getTaskList() : LiveData<List<Task>>

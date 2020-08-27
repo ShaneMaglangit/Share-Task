@@ -12,17 +12,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentTaskBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TaskFragment : Fragment() {
+    @Inject
+    lateinit var viewModelAssistedFactory: TaskViewModel.AssistedFactory
+
     private lateinit var binding: FragmentTaskBinding
-    private val viewModel: TaskViewModel by viewModels()
 
     private lateinit var checkboxAdapter: CheckboxAdapter
     private lateinit var fileAdapter: CardTextAdapter
     private lateinit var memberAdapter: CardTextAdapter
 
     private val args: TaskFragmentArgs by navArgs()
+
+    private val viewModel: TaskViewModel by viewModels {
+        TaskViewModel.provideFactory(viewModelAssistedFactory, args.taskId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -118,5 +125,4 @@ class TaskFragment : Fragment() {
 
         return binding.root
     }
-
 }
