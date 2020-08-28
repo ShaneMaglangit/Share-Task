@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shanemaglangit.sharetask.R
@@ -50,20 +51,6 @@ class TaskFragment : Fragment() {
         memberAdapter = CardTextAdapter(CardTextListener { /* TODO: Something */ })
         binding.recyclerMembers.adapter = memberAdapter
         binding.recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
-//
-//        viewModel.loadTask(args.taskId)
-//
-//        viewModel.checkboxList.observe(viewLifecycleOwner, Observer {
-//            if (it != null) {
-//                checkboxAdapter.submitList(it)
-//            }
-//        })
-//
-//        viewModel.task.observe(viewLifecycleOwner, Observer {
-//            if (it != null) {
-//                memberAdapter.submitList(it.members.toList())
-//            }
-//        })
 //
 //        viewModel.showCheckboxDialog.observe(viewLifecycleOwner, Observer {
 //            if (it) {
@@ -124,5 +111,21 @@ class TaskFragment : Fragment() {
 //        })
 
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        viewModel.checkboxList.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                checkboxAdapter.submitList(it)
+            }
+        })
+
+        viewModel.task.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                memberAdapter.submitList(it.members.toList())
+            }
+        })
     }
 }

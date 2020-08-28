@@ -5,16 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.FirebaseAuth
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
-    private val viewModel: ProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +31,7 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonSignout.setOnClickListener {
-            viewModel.signOut()
+            firebaseAuth.signOut()
             requireActivity().finishAffinity()
             findNavController().navigate(R.id.authenticationActivity)
         }
@@ -36,7 +39,7 @@ class ProfileFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        binding.textUsername.text = viewModel.username
-        binding.textEmail.text = viewModel.email
+        binding.textUsername.text = firebaseAuth.currentUser!!.displayName!!
+        binding.textEmail.text = firebaseAuth.currentUser!!.email
     }
 }

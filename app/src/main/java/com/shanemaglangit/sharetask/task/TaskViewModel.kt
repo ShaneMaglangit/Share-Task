@@ -73,36 +73,6 @@ class TaskViewModel @AssistedInject constructor(
 //            .update("progress", progress)
     }
 
-    private fun listenToCheckboxes(checkboxIdList: List<String>) {
-//        if (checkboxListener != null) (checkboxListener as ListenerRegistration).remove()
-//
-//        if (checkboxIdList.isNotEmpty()) {
-//            checkboxListener = firebaseFirestore.collection("/checkbox")
-//                .whereIn(FieldPath.documentId(), checkboxIdList)
-//                .addSnapshotListener addSnapShotListener@{ snapshot, e ->
-//                    if (e != null) {
-//                        Timber.w("Listening to task document failed")
-//                        return@addSnapShotListener
-//                    }
-//
-//                    if (snapshot != null) {
-//                        val tempCheckboxList = mutableListOf<Checkbox>()
-//
-//                        snapshot.forEach {
-//                            val checkbox = it.toObject(Checkbox::class.java).apply { id = it.id }
-//                            tempCheckboxList.add(checkbox)
-//                        }
-//
-//                        if (_checkboxList.value != tempCheckboxList) {
-//                            _checkboxList.value = tempCheckboxList
-//                        }
-//                    }
-//                }
-//        } else {
-//            _checkboxList.value = mutableListOf()
-//        }
-    }
-
     fun promptMemberDialog() {
         _showMemberDialog.value = true
     }

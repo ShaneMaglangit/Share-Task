@@ -9,9 +9,8 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.util.BaseViewModel
 
-class SignInViewModel @ViewModelInject constructor(
-    private val firebaseAuth: FirebaseAuth
-) : BaseViewModel() {
+class SignInViewModel @ViewModelInject constructor(private val firebaseAuth: FirebaseAuth) :
+    BaseViewModel() {
     private val _emailError = MutableLiveData<String>()
     val emailError: LiveData<String>
         get() = _emailError

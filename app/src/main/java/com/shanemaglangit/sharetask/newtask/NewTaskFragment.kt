@@ -1,5 +1,6 @@
 package com.shanemaglangit.sharetask.newtask
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentNewTaskBinding
 import dagger.hilt.android.AndroidEntryPoint
+import me.jfenn.colorpickerdialog.dialogs.ColorPickerDialog
 
 @AndroidEntryPoint
 class NewTaskFragment : Fragment() {
@@ -26,16 +28,42 @@ class NewTaskFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        this.javaClass == NewTaskFragment::class.java
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.textColor.addColorPickerDialog()
+        binding.viewColorPreview.addColorPickerDialog()
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 findNavController().navigate(it)
-                viewModel.navigationComplete()
+                viewModel.completedNavigation()
             }
         })
-
-        return binding.root
     }
 
+    private fun View.addColorPickerDialog() {
+        this.setOnClickListener {
+            ColorPickerDialog()
+                .withPresets(
+                    Color.parseColor("#55efc4"),
+                    Color.parseColor("#81ecec"),
+                    Color.parseColor("#ffeaa7"),
+                    Color.parseColor("#fab1a0")
+                )
+                .withAlphaEnabled(false)
+                .withListener { pickerView, color ->
+                    viewModel.updateColor(color)
+                    pickerView?.dismiss()
+                }
+                .show(this@NewTaskFragment.childFragmentManager, "Color Picker Dialog")
+        }
+    }
 }

@@ -18,7 +18,7 @@ class ListFragment : Fragment() {
     private lateinit var binding: FragmentListBinding
     private val viewModel: ListViewModel by viewModels()
 
-    private lateinit var taskAdapter: TaskAdapter
+    private lateinit var taskPreviewAdapter: TaskPreviewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,11 +26,11 @@ class ListFragment : Fragment() {
     ): View? {
         binding = FragmentListBinding.inflate(inflater)
 
-        taskAdapter = TaskAdapter(TaskListener {
+        taskPreviewAdapter = TaskPreviewAdapter(TaskPreviewListener {
             findNavController().navigate(ListFragmentDirections.actionListFragmentToTaskFragment(it.id))
         })
 
-        binding.recyclerTasks.adapter = taskAdapter
+        binding.recyclerTasks.adapter = taskPreviewAdapter
         binding.recyclerTasks.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
@@ -44,16 +44,18 @@ class ListFragment : Fragment() {
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 if (tab != null) {
-                    taskAdapter.submitList(viewModel.taskList.value, tab.position)
+                    taskPreviewAdapter.submitList(viewModel.taskList.value, tab.position)
                 }
             }
         })
+
+        binding.fabAdd.setOnClickListener { viewModel.navigateToNewTask() }
     }
 
     override fun onStart() {
         super.onStart()
         viewModel.taskList.observe(viewLifecycleOwner, Observer {
-            taskAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
+            taskPreviewAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
         })
 
         viewModel.navigationAction.observe(viewLifecycleOwner, Observer {

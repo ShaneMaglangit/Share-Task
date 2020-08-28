@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.shanemaglangit.sharetask.model.data.Task
+import com.shanemaglangit.sharetask.model.data.TaskPreview
 import com.shanemaglangit.sharetask.util.notifyObserver
 import dagger.hilt.android.scopes.ActivityScoped
 import javax.inject.Inject
@@ -17,10 +18,11 @@ class Repository @Inject constructor(
     firebaseAuth: FirebaseAuth
 ) {
     private val userId = firebaseAuth.currentUser!!.uid
+    private val userName = firebaseAuth.currentUser!!.displayName!!
     private val dbRef = firebaseDatabase.reference
 
-    private val _taskList = MutableLiveData<MutableList<Task>>(mutableListOf())
-    val taskList: LiveData<MutableList<Task>>
+    private val _taskList = MutableLiveData<MutableList<TaskPreview>>(mutableListOf())
+    val taskList: LiveData<MutableList<TaskPreview>>
         get() = _taskList
 
     init {
@@ -31,11 +33,12 @@ class Repository @Inject constructor(
 
                 override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                     if (snapshot.exists()) {
-                        val task = snapshot.getValue(Task::class.java)
+                        val taskPreview = snapshot.getValue(TaskPreview::class.java)
 
-                        if (task != null) {
-                            task.id = snapshot.key!!
-                            _taskList.value!!.add(task)
+                        if (taskPreview != null) {
+                            taskPreview.id = snapshot.key!!
+                            _taskList.value!!.add(taskPreview)
+                            _taskList.value!!.sortByDescending { it.dateUpdated }
                             _taskList.notifyObserver()
                         }
                     }
@@ -44,23 +47,36 @@ class Repository @Inject constructor(
                 override fun onChildRemoved(snapshot: DataSnapshot) {
                     if (snapshot.exists()) {
                         _taskList.value!!.removeAll { it.id == snapshot.key }
+                        _taskList.value!!.sortByDescending { it.dateUpdated }
                         _taskList.notifyObserver()
                     }
                 }
 
                 override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
                     if (snapshot.exists()) {
-                        val task = snapshot.getValue(Task::class.java)
+                        val taskPreview = snapshot.getValue(TaskPreview::class.java)
 
-                        if (task != null) {
-                            task.id = snapshot.key!!
-                            _taskList.value!!.removeAll { it.id == task.id }
-                            _taskList.value!!.add(task)
+                        if (taskPreview != null) {
+                            taskPreview.id = snapshot.key!!
+                            _taskList.value!!.removeAll { it.id == taskPreview.id }
+                            _taskList.value!!.add(taskPreview)
+                            _taskList.value!!.sortByDescending { it.dateUpdated }
                             _taskList.notifyObserver()
                         }
                     }
                 }
             })
+    }
+
+    fun writeTask(task: Task) {
+        task.apply {
+            id = dbRef.child("/task").push().key!!
+            members[userId] = userName
+        }
+
+        dbRef.child("/task/${task.id}").setValue(task)
+        dbRef.child("/userTask/$userId/${task.id}").setValue(TaskPreview.createFromTask(task))
+        dbRef.child("/userTaskList/$userId/${task.id}").setValue(true)
     }
 
     fun getTask(taskId: String): LiveData<Task> {

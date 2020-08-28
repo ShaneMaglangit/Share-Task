@@ -6,25 +6,25 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.shanemaglangit.sharetask.databinding.TaskItemBinding
-import com.shanemaglangit.sharetask.model.data.Task
+import com.shanemaglangit.sharetask.model.data.TaskPreview
 
-class TaskAdapter(private val taskListener: TaskListener) :
-    ListAdapter<Task, TaskAdapter.ViewHolder>(TaskDiffCallback()) {
+class TaskPreviewAdapter(private val taskPreviewListener: TaskPreviewListener) :
+    ListAdapter<TaskPreview, TaskPreviewAdapter.ViewHolder>(TaskPreviewDiffCallback()) {
 
-    public override fun getItem(position: Int): Task {
+    public override fun getItem(position: Int): TaskPreview {
         return super.getItem(position)
     }
 
-    override fun onBindViewHolder(holder: TaskAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TaskPreviewAdapter.ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, taskListener)
+        holder.bind(item, taskPreviewListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
-    fun submitList(list: List<Task>?, filterButtonId: Int) {
+    fun submitList(list: List<TaskPreview>?, filterButtonId: Int) {
         super.submitList(list?.filter {
             when (filterButtonId) {
                 1 -> !it.isGroup
@@ -37,11 +37,10 @@ class TaskAdapter(private val taskListener: TaskListener) :
     class ViewHolder private constructor(val binding: TaskItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Task, taskListener: TaskListener) {
-            binding.textTitle.text = item.title
-            binding.textSubject.text = item.subject
-            binding.progressTask.progress = item.progress
-            binding.root.setOnClickListener { taskListener.onClick(item) }
+        fun bind(item: TaskPreview, taskPreviewListener: TaskPreviewListener) {
+            binding.taskPreview = item
+            binding.taskPreviewListener = taskPreviewListener
+            binding.executePendingBindings()
         }
 
         companion object {
@@ -54,11 +53,14 @@ class TaskAdapter(private val taskListener: TaskListener) :
     }
 }
 
-class TaskListener(val clickListener: (task: Task) -> Unit) {
-    fun onClick(task: Task) = clickListener(task)
+class TaskPreviewListener(val clickListener: (taskPreview: TaskPreview) -> Unit) {
+    fun onClick(taskPreview: TaskPreview) = clickListener(taskPreview)
 }
 
-class TaskDiffCallback : DiffUtil.ItemCallback<Task>() {
-    override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem.id == newItem.id
-    override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean = oldItem == newItem
+class TaskPreviewDiffCallback : DiffUtil.ItemCallback<TaskPreview>() {
+    override fun areItemsTheSame(oldItem: TaskPreview, newItem: TaskPreview): Boolean =
+        oldItem.id == newItem.id
+
+    override fun areContentsTheSame(oldItem: TaskPreview, newItem: TaskPreview): Boolean =
+        oldItem == newItem
 }
