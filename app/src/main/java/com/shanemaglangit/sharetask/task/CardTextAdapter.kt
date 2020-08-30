@@ -14,7 +14,7 @@ class CardTextAdapter(private val cardTextListener: CardTextListener) :
         return super.getItem(position)
     }
 
-    override fun onBindViewHolder(holder: CardTextAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item, cardTextListener)
     }

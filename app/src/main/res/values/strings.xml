@@ -30,6 +30,9 @@
     <string name="label_attached_file">Attached Files</string>
     <string name="label_member">Members</string>
 
+    <string name="modal_member_hint">Enter Member Email</string>
+    <string name="modal_checkbox_hint">Enter Checkbox Text</string>
+
     <string-array name="intro_images">
         <item>ic_placeholder</item>
         <item>ic_placeholder</item>
@@ -41,6 +44,4 @@
         <item>This is the description for the first page in the intro</item>
         <item>This is the description for the first page in the intro</item>
     </string-array>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

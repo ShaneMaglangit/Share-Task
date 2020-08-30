@@ -1,22 +1,19 @@
 package com.shanemaglangit.sharetask.task
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.shanemaglangit.sharetask.model.data.Checkbox
 import com.shanemaglangit.sharetask.model.data.Task
 import com.shanemaglangit.sharetask.model.repository.Repository
+import com.shanemaglangit.sharetask.util.BaseViewModel
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 
 class TaskViewModel @AssistedInject constructor(
-    private val firebaseFirestore: FirebaseFirestore,
     private val repository: Repository,
     @Assisted val taskId: String
-) : ViewModel() {
+) : BaseViewModel() {
     @AssistedInject.Factory
     interface AssistedFactory {
         fun create(taskId: String): TaskViewModel
@@ -34,118 +31,7 @@ class TaskViewModel @AssistedInject constructor(
     }
 
     val task: LiveData<Task> = repository.getTask(taskId)
+    val checkboxList: LiveData<MutableList<Checkbox>> = repository.getCheckbox(taskId)
 
-    private val _checkboxList = MutableLiveData<MutableList<Checkbox>>()
-    val checkboxList: LiveData<MutableList<Checkbox>>
-        get() = _checkboxList
-
-    private val _showMemberDialog = MutableLiveData<Boolean>()
-    val showMemberDialog: LiveData<Boolean>
-        get() = _showMemberDialog
-
-    private val _showCheckboxDialog = MutableLiveData<Boolean>()
-    val showCheckboxDialog: LiveData<Boolean>
-        get() = _showCheckboxDialog
-
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String>
-        get() = _error
-
-    private var checkboxListener: ListenerRegistration? = null
-
-    fun updateCheckbox(checkbox: Checkbox) {
-        firebaseFirestore.collection("/checkbox")
-            .document(checkbox.id)
-            .set(checkbox)
-
-        updateProgress()
-    }
-
-    private fun updateProgress() {
-//        val checkedCount = _checkboxList.value!!.filter { it.checked }.size.toFloat()
-//        val max = _checkboxList.value!!.size.toFloat()
-//        val progress = ((checkedCount / max) * 100).roundToInt()
-//
-//        _task.value!!.progress = progress
-//
-//        firebaseFirestore.collection("/task")
-//            .document(_task.value!!.id)
-//            .update("progress", progress)
-    }
-
-    fun promptMemberDialog() {
-        _showMemberDialog.value = true
-    }
-
-    fun memberDialogShown() {
-        _showMemberDialog.value = false
-    }
-
-    fun addMember(userId: String) {
-//        if (!task.value!!.members.containsKey(userId)) {
-//            firebaseFirestore.collection("/user")
-//                .document(userId)
-//                .get()
-//                .addOnSuccessListener {
-//                    if (it.exists()) {
-//                        val newMember = it.toObject(User::class.java)
-//                        _task.value!!.members[userId] = newMember!!.username
-//
-//                        firebaseFirestore.collection("/task")
-//                            .document(_task.value!!.id)
-//                            .set(_task.value!!)
-//
-//                        firebaseFirestore.collection("/user")
-//                            .document(userId)
-//                            .update("tasks", FieldValue.arrayUnion(_task.value!!.id))
-//                    } else {
-//                        _error.value = "User does not exists"
-//                    }
-//                }
-//                .addOnFailureListener {
-//                    _error.value = it.message
-//                }
-//        } else {
-//            _error.value = "User is already a member"
-//        }
-    }
-
-    fun errorShown() {
-        _error.value = null
-    }
-
-    fun promptCheckboxDialog() {
-        _showCheckboxDialog.value = true
-    }
-
-    fun checkboxDialogShown() {
-        _showCheckboxDialog.value = false
-    }
-
-    fun addNewCheckbox(checkboxText: String) {
-//        val checkbox = Checkbox(
-//            details = checkboxText,
-//            dateCreated = Timestamp.now()
-//        )
-//
-//        _checkboxList.value!!.add(checkbox)
-//
-//        firebaseFirestore.collection("/checkbox")
-//            .add(checkbox)
-//            .addOnSuccessListener {
-//                firebaseFirestore.collection("/task")
-//                    .document(_task.value!!.id)
-//                    .update("checkboxes", FieldValue.arrayUnion(it.id))
-//                    .addOnFailureListener {
-//                        _error.value = it.message
-//                    }
-//
-//                _task.value!!.checkboxes.add(it.id)
-//            }
-//            .addOnFailureListener {
-//                _error.value = it.message
-//            }
-//
-//        updateProgress()
-    }
+    fun updateCheckbox(checkbox: Checkbox) {}
 }

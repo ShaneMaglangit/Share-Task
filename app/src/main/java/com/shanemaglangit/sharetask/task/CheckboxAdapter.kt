@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shanemaglangit.sharetask.databinding.CheckboxItemBinding
 import com.shanemaglangit.sharetask.model.data.Checkbox
 
-
-class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
+class CheckboxAdapter(private val checkboxListener: CheckboxListener) :
     ListAdapter<Checkbox, CheckboxAdapter.ViewHolder>(CheckboxDiffCallback()) {
 
     public override fun getItem(position: Int): Checkbox {
@@ -18,28 +17,24 @@ class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, checkChangeListener)
+        holder.bind(item, checkboxListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
     }
 
+    override fun submitList(list: MutableList<Checkbox>?) {
+        super.submitList(list)
+        notifyDataSetChanged()
+    }
+
     class ViewHolder private constructor(val binding: CheckboxItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Checkbox, checkChangeListener: CheckChangeListener) {
-            binding.textDetails.text = item.details
-            binding.checkboxChecked.isChecked = item.checked
-
-            binding.root.setOnClickListener {
-                binding.checkboxChecked.isChecked = !binding.checkboxChecked.isChecked
-            }
-
-            binding.checkboxChecked.setOnCheckedChangeListener { _, isChecked ->
-                item.checked = isChecked
-                checkChangeListener.checkChangeListener(item)
-            }
+        fun bind(item: Checkbox, checkboxListener: CheckboxListener) {
+            binding.checkbox = item
+            binding.executePendingBindings()
         }
 
         companion object {
@@ -52,8 +47,8 @@ class CheckboxAdapter(private val checkChangeListener: CheckChangeListener) :
     }
 }
 
-class CheckChangeListener(val checkChangeListener: (checkbox: Checkbox) -> Unit) {
-    fun onClick(checkbox: Checkbox) = checkChangeListener(checkbox)
+class CheckboxListener(val clickListener: (checkbox: Checkbox) -> Unit) {
+    fun onClick(checkbox: Checkbox) = clickListener(checkbox)
 }
 
 class CheckboxDiffCallback : DiffUtil.ItemCallback<Checkbox>() {

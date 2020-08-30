@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shanemaglangit.sharetask.R
@@ -40,7 +41,7 @@ class TaskFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        checkboxAdapter = CheckboxAdapter(CheckChangeListener { viewModel.updateCheckbox(it) })
+        checkboxAdapter = CheckboxAdapter(CheckboxListener { viewModel.updateCheckbox(it) })
         binding.recyclerCheckbox.adapter = checkboxAdapter
         binding.recyclerCheckbox.layoutManager = LinearLayoutManager(requireContext())
 
@@ -51,81 +52,35 @@ class TaskFragment : Fragment() {
         memberAdapter = CardTextAdapter(CardTextListener { /* TODO: Something */ })
         binding.recyclerMembers.adapter = memberAdapter
         binding.recyclerMembers.layoutManager = LinearLayoutManager(requireContext())
-//
-//        viewModel.showCheckboxDialog.observe(viewLifecycleOwner, Observer {
-//            if (it) {
-//                val editCheckboxText = EditText(requireContext()).apply {
-//                    inputType = InputType.TYPE_CLASS_TEXT
-//                    isSingleLine = true
-//                }
-//
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle("Enter the User ID of the new member")
-//                    .setView(editCheckboxText)
-//                    .setPositiveButton("Add") { dialog, _ ->
-//                        viewModel.addNewCheckbox(editCheckboxText.text.toString())
-//                        dialog.dismiss()
-//                    }
-//                    .setNegativeButton("Cancel") { dialog, _ ->
-//                        dialog.dismiss()
-//                    }
-//                    .show()
-//
-//                viewModel.checkboxDialogShown()
-//            }
-//        })
-
-//        viewModel.showMemberDialog.observe(viewLifecycleOwner, Observer {
-//            if (it) {
-//                val editUserId = EditText(requireContext()).apply {
-//                    inputType = InputType.TYPE_CLASS_TEXT
-//                    isSingleLine = true
-//                }
-//
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle("Enter the User ID of the new member")
-//                    .setView(editUserId)
-//                    .setPositiveButton("Add") { dialog, _ ->
-//                        viewModel.addMember(editUserId.text.toString())
-//                        dialog.dismiss()
-//                    }
-//                    .setNegativeButton("Cancel") { dialog, _ ->
-//                        dialog.dismiss()
-//                    }
-//                    .show()
-//
-//                viewModel.memberDialogShown()
-//            }
-//        })
-//
-//        viewModel.error.observe(viewLifecycleOwner, Observer {
-//            if (it != null) {
-//                AlertDialog.Builder(requireContext())
-//                    .setTitle("A problem has occurred")
-//                    .setMessage(it)
-//                    .setPositiveButton("Ok", null)
-//                    .show()
-//
-//                viewModel.errorShown()
-//            }
-//        })
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonAddMember.setOnClickListener {
+            findNavController().navigate(
+                TaskFragmentDirections.actionTaskFragmentToUserDialogFragment(viewModel.task.value!!)
+            )
+        }
+
+        binding.buttonAddCheckbox.setOnClickListener {
+            findNavController().navigate(
+                TaskFragmentDirections.actionTaskFragmentToCheckboxDialogFragment(viewModel.task.value!!)
+            )
+        }
     }
 
     override fun onStart() {
         super.onStart()
 
-        viewModel.checkboxList.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                checkboxAdapter.submitList(it)
-            }
+        viewModel.task.observe(viewLifecycleOwner, Observer {
+            if (it != null) memberAdapter.submitList(it.members.toList())
         })
 
-        viewModel.task.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                memberAdapter.submitList(it.members.toList())
-            }
+        viewModel.checkboxList.observe(viewLifecycleOwner, Observer {
+            if (it != null) checkboxAdapter.submitList(it)
         })
     }
 }

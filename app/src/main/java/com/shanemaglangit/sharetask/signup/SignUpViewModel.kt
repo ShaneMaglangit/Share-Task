@@ -8,8 +8,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.model.data.User
 import com.shanemaglangit.sharetask.util.BaseViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.tasks.await
 
 class SignUpViewModel @ViewModelInject constructor(
     private val firebaseAuth: FirebaseAuth,
@@ -40,9 +38,6 @@ class SignUpViewModel @ViewModelInject constructor(
     val password = MutableLiveData<String>()
     val confirmPassword = MutableLiveData<String>()
 
-    private val job = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + job)
-
     fun signUp() {
         if (checkFieldsComplete()) {
             if (password.value.equals(confirmPassword.value)) {
@@ -54,7 +49,7 @@ class SignUpViewModel @ViewModelInject constructor(
                             .apply { displayName = username.value }
                             .build()
 
-                        val user = User(username.value!!)
+                        val user = User(username = username.value!!, email = email.value!!)
 
                         it.user!!.updateProfile(userProfileChangeRequest)
                         it.user!!.sendEmailVerification()
@@ -79,22 +74,16 @@ class SignUpViewModel @ViewModelInject constructor(
     }
 
     private fun writeNewUser(userUid: String, user: User) {
-        uiScope.launch {
-            val isSuccessful = writeNewUserToDatabase(userUid, user)
-            if (isSuccessful) navigate(R.id.mainActivity)
-            _creatingUser.value = false
-        }
-    }
-
-    private suspend fun writeNewUserToDatabase(userUid: String, user: User): Boolean {
-        return withContext(Dispatchers.IO) withContext@{
-            var isSuccess = false
-
-            firebaseDatabase.reference.child("users").child(userUid).setValue(user)
-                .addOnCompleteListener { isSuccess = it.isSuccessful }.await()
-
-            isSuccess
-        }
+        firebaseDatabase.reference.child("users").child(userUid).setValue(user)
+            .addOnCompleteListener {
+                val clearedEmail = email.value!!.replace(Regex("[^A-Za-z0-9 ]"), "")
+                firebaseDatabase.reference.child("/emailLookup/$clearedEmail")
+                    .setValue(userUid)
+                    .addOnSuccessListener {
+                        navigate(R.id.mainActivity)
+                        _creatingUser.value = false
+                    }
+            }
     }
 
     private fun checkFieldsComplete(): Boolean {
@@ -109,10 +98,5 @@ class SignUpViewModel @ViewModelInject constructor(
 
     fun navigateToSignIn() {
         navigate(R.id.action_signUpFragment_to_signInFragment)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        job.cancel()
     }
 }
