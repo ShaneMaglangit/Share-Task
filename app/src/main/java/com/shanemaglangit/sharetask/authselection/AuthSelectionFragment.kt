@@ -26,7 +26,7 @@ class AuthSelectionFragment : Fragment() {
         binding = FragmentAuthSelectionBinding.inflate(inflater)
         binding.viewPagerIntro.adapter = sliderPagerAdapter
 
-        TabLayoutMediator(binding.tabIntro, binding.viewPagerIntro) {tab, _ ->
+        TabLayoutMediator(binding.tabIntro, binding.viewPagerIntro) { tab, _ ->
             binding.viewPagerIntro.setCurrentItem(tab.position, true)
         }.attach()
 
@@ -37,11 +37,11 @@ class AuthSelectionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonSignup.setOnClickListener {
-            findNavController().navigate(R.id.action_authSelectionFragment_to_signUpFragment)
+            findNavController().navigate(AuthSelectionFragmentDirections.actionAuthSelectionFragmentToSignUpFragment())
         }
 
         binding.buttonSignin.setOnClickListener {
-            findNavController().navigate(R.id.action_authSelectionFragment_to_signInFragment)
+            findNavController().navigate(AuthSelectionFragmentDirections.actionAuthSelectionFragmentToSignInFragment())
         }
     }
 
@@ -53,7 +53,11 @@ class AuthSelectionFragment : Fragment() {
         for (i in imageArray.indices) {
             items.add(
                 IntroItem(
-                    resources.getIdentifier(imageArray[i], "drawable", requireActivity().packageName),
+                    resources.getIdentifier(
+                        imageArray[i],
+                        "drawable",
+                        requireActivity().packageName
+                    ),
                     descriptionArray[i]
                 )
             )
@@ -62,7 +66,7 @@ class AuthSelectionFragment : Fragment() {
         return items
     }
 
-    private inner class SliderPagerAdapter(fragment: Fragment, val items: List<IntroItem>) :
+    private class SliderPagerAdapter(fragment: Fragment, val items: List<IntroItem>) :
         FragmentStateAdapter(fragment) {
         override fun getItemCount(): Int = items.size
 

@@ -3,22 +3,23 @@ package com.shanemaglangit.sharetask.util
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavDirections
 
 open class BaseViewModel : ViewModel() {
-    private val _navigationAction = MutableLiveData<Int>()
-    val navigationAction: LiveData<Int>
-        get() = _navigationAction
+    private val _navigationDirection = MutableLiveData<NavDirections>()
+    val navigationDirection: LiveData<NavDirections>
+        get() = _navigationDirection
 
     private val _exception = MutableLiveData<Exception>()
     val exception: LiveData<Exception>
         get() = _exception
 
-    fun navigate(action: Int) {
-        _navigationAction.value = action
+    fun navigate(direction: NavDirections) {
+        _navigationDirection.value = direction
     }
 
     fun completedNavigation() {
-        _navigationAction.value = null
+        _navigationDirection.value = null
     }
 
     fun catchException(exception: Exception) {

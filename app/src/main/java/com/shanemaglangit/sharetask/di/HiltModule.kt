@@ -1,14 +1,17 @@
 package com.shanemaglangit.sharetask.di
 
+import android.app.DownloadManager
+import android.content.Context
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.inject.assisted.dagger2.AssistedModule
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
 @Module
@@ -16,8 +19,8 @@ import javax.inject.Singleton
 object HiltModule {
     @Provides
     @Singleton
-    fun provideFirebaseFirestore(): FirebaseFirestore {
-        return FirebaseFirestore.getInstance()
+    fun provideFirebaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
     }
 
     @Provides
@@ -30,6 +33,12 @@ object HiltModule {
     @Singleton
     fun provideFirebaseDatabase(): FirebaseDatabase {
         return FirebaseDatabase.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDownloadManager(@ApplicationContext context: Context): DownloadManager {
+        return context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
     }
 }
 

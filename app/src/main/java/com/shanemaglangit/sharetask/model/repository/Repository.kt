@@ -1,9 +1,13 @@
 package com.shanemaglangit.sharetask.model.repository
 
+import android.app.DownloadManager
+import android.net.Uri
+import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.storage.FirebaseStorage
 import com.shanemaglangit.sharetask.model.data.Checkbox
 import com.shanemaglangit.sharetask.model.data.Task
 import com.shanemaglangit.sharetask.model.data.TaskPreview
@@ -11,16 +15,20 @@ import com.shanemaglangit.sharetask.model.data.User
 import com.shanemaglangit.sharetask.util.notifyObserver
 import dagger.hilt.android.scopes.ActivityScoped
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 
 @ActivityScoped
 class Repository @Inject constructor(
+    private val downloadManager: DownloadManager,
+    firebaseStorage: FirebaseStorage,
     firebaseDatabase: FirebaseDatabase,
     firebaseAuth: FirebaseAuth
 ) {
-    private val userId = firebaseAuth.currentUser!!.uid
+    val userId = firebaseAuth.currentUser!!.uid
     private val userName = firebaseAuth.currentUser!!.displayName!!
     private val dbRef = firebaseDatabase.reference
+    private val storageRef = firebaseStorage.reference
 
     private val _taskList = MutableLiveData<MutableList<TaskPreview>>(mutableListOf())
     val taskList: LiveData<MutableList<TaskPreview>>
@@ -80,7 +88,7 @@ class Repository @Inject constructor(
         dbRef.child("/userTaskList/$userId/${task.id}").setValue(true)
     }
 
-    fun getTask(taskId: String): LiveData<Task> {
+    fun getTask(taskId: String): MutableLiveData<Task> {
         val task = MutableLiveData<Task>()
 
         dbRef.child("/task/$taskId").addValueEventListener(object : ValueEventListener {
@@ -166,15 +174,60 @@ class Repository @Inject constructor(
         val checkbox = Checkbox(details = checkboxText, checked = false)
         val checkboxId = dbRef.child("/checkbox/${task.id}").push().key
         dbRef.child("/checkbox/${task.id}/$checkboxId").setValue(checkbox)
-        updateProgress(task, 1)
+        updateProgressMax(task, 1)
     }
 
     private fun updateProgress(task: Task, increment: Int) {
+        dbRef.child("/task/${task.id}/progress").setValue(task.progress + increment)
+
+        task.members.forEach {
+            dbRef.child("/userTask/${it.key}/${task.id}/progress")
+                .setValue(task.progress + increment)
+        }
+    }
+
+    private fun updateProgressMax(task: Task, increment: Int) {
         dbRef.child("/task/${task.id}/progressMax").setValue(task.progressMax + increment)
 
         task.members.forEach {
             dbRef.child("/userTask/${it.key}/${task.id}/progressMax")
                 .setValue(task.progressMax + increment)
         }
+    }
+
+    fun uploadFile(taskId: String, fileName: String, uri: Uri) {
+        val fileUid = UUID.randomUUID()
+
+        storageRef.child("/$fileUid").putFile(uri)
+            .addOnSuccessListener {
+                dbRef.child("/task/$taskId/files/${fileUid}").setValue(fileName)
+            }
+    }
+
+    fun downloadFile(fileUid: String, fileName: String) {
+        storageRef.child("/$fileUid").downloadUrl
+            .addOnSuccessListener {
+                val request = DownloadManager.Request(it)
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                downloadManager.enqueue(request)
+            }
+    }
+
+    fun removeFile(taskId: String, fileUid: String) {
+        storageRef.child("/$fileUid").delete()
+        dbRef.child("/task/$taskId/files/$fileUid").removeValue()
+    }
+
+    fun removeMember(taskId: String, userId: String) {
+        dbRef.child("/task/$taskId/members/$userId").removeValue()
+        dbRef.child("/userTask/$userId/$taskId").removeValue()
+        dbRef.child("/userTaskList/$userId/$taskId").removeValue()
+    }
+
+    fun removeCheckbox(task: Task, checkbox: Checkbox) {
+        dbRef.child("/checkbox/${task.id}/${checkbox.id}").removeValue()
+        if (checkbox.checked) updateProgress(task, -1)
+        updateProgressMax(task, -1)
     }
 }

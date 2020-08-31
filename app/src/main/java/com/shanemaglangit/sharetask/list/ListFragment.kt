@@ -58,7 +58,7 @@ class ListFragment : Fragment() {
             taskPreviewAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
         })
 
-        viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
+        viewModel.navigationDirection.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 findNavController().navigate(it)
                 viewModel.completedNavigation()

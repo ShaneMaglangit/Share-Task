@@ -6,7 +6,6 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
-import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.util.BaseViewModel
 
 class SignInViewModel @ViewModelInject constructor(private val firebaseAuth: FirebaseAuth) :
@@ -34,7 +33,9 @@ class SignInViewModel @ViewModelInject constructor(private val firebaseAuth: Fir
             _authenticatingUser.value = true
 
             firebaseAuth.signInWithEmailAndPassword(email.value!!, password.value!!)
-                .addOnSuccessListener { navigate(R.id.mainActivity) }
+                .addOnSuccessListener {
+                    navigate(SignInFragmentDirections.actionSignInFragmentToMainActivity())
+                }
                 .addOnFailureListener {
                     when (it) {
                         is FirebaseAuthInvalidUserException -> _emailError.value = it.message
@@ -47,6 +48,6 @@ class SignInViewModel @ViewModelInject constructor(private val firebaseAuth: Fir
     }
 
     fun navigateToSignUp() {
-        navigate(R.id.action_signInFragment_to_signUpFragment)
+        navigate(SignInFragmentDirections.actionSignInFragmentToSignUpFragment())
     }
 }

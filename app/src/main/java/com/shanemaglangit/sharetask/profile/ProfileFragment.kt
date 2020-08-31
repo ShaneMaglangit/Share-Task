@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.databinding.FragmentProfileBinding
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -33,7 +32,9 @@ class ProfileFragment : Fragment() {
         binding.buttonSignout.setOnClickListener {
             firebaseAuth.signOut()
             requireActivity().finishAffinity()
-            findNavController().navigate(R.id.authenticationActivity)
+            findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToAuthenticationActivity()
+            )
         }
     }
 

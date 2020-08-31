@@ -32,8 +32,8 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
-            if(it != null) {
+        viewModel.navigationDirection.observe(viewLifecycleOwner, Observer {
+            if (it != null) {
                 findNavController().navigate(it)
                 viewModel.completedNavigation()
             }

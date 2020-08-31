@@ -41,7 +41,7 @@ class NewTaskFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
-        viewModel.navigationAction.observe(viewLifecycleOwner, Observer {
+        viewModel.navigationDirection.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 findNavController().navigate(it)
                 viewModel.completedNavigation()

@@ -21,7 +21,11 @@
         android:id="@+id/profileFragment"
         android:name="com.shanemaglangit.sharetask.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_authenticationActivity"
+            app:destination="@id/authenticationActivity" />
+    </fragment>
     <fragment
         android:id="@+id/newTaskFragment"
         android:name="com.shanemaglangit.sharetask.newtask.NewTaskFragment"

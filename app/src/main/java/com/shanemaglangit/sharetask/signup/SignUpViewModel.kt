@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
-import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.model.data.User
 import com.shanemaglangit.sharetask.util.BaseViewModel
 
@@ -80,7 +79,7 @@ class SignUpViewModel @ViewModelInject constructor(
                 firebaseDatabase.reference.child("/emailLookup/$clearedEmail")
                     .setValue(userUid)
                     .addOnSuccessListener {
-                        navigate(R.id.mainActivity)
+                        navigate(SignUpFragmentDirections.actionSignUpFragmentToMainActivity())
                         _creatingUser.value = false
                     }
             }
@@ -97,6 +96,6 @@ class SignUpViewModel @ViewModelInject constructor(
     }
 
     fun navigateToSignIn() {
-        navigate(R.id.action_signUpFragment_to_signInFragment)
+        navigate(SignUpFragmentDirections.actionSignUpFragmentToSignInFragment())
     }
 }

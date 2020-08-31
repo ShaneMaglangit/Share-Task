@@ -1,15 +1,15 @@
 package com.shanemaglangit.sharetask.authentication
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.shanemaglangit.sharetask.R
+import com.shanemaglangit.sharetask.util.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AuthenticationActivity : AppCompatActivity() {
+class AuthenticationActivity : BaseActivity() {
     @Inject
     lateinit var firebaseAuth: FirebaseAuth
 
@@ -17,7 +17,6 @@ class AuthenticationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
     }
-
 
     override fun onStart() {
         super.onStart()

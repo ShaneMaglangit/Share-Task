@@ -23,11 +23,17 @@ class CardTextAdapter(private val cardTextListener: CardTextListener) :
         return ViewHolder.from(parent)
     }
 
+    override fun submitList(list: List<Pair<String, String>>?) {
+        super.submitList(list)
+        notifyDataSetChanged()
+    }
+
     class ViewHolder private constructor(val binding: CardTextItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Pair<String, String>, cardTextListener: CardTextListener) {
             binding.textTitle.text = item.second
+            binding.root.setOnClickListener { cardTextListener.onClick(item) }
         }
 
         companion object {

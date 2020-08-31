@@ -2,7 +2,6 @@ package com.shanemaglangit.sharetask.newtask
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
-import com.shanemaglangit.sharetask.R
 import com.shanemaglangit.sharetask.model.data.Task
 import com.shanemaglangit.sharetask.model.repository.Repository
 import com.shanemaglangit.sharetask.util.BaseViewModel
@@ -15,7 +14,7 @@ class NewTaskViewModel @ViewModelInject constructor(
 
     fun saveTask() {
         repository.writeTask(task.value!!)
-        navigate(R.id.action_newTaskFragment_to_listFragment)
+        navigate(NewTaskFragmentDirections.actionNewTaskFragmentToListFragment())
     }
 
     fun updateColor(color: Int) {
