@@ -33,6 +33,11 @@
         <action
             android:id="@+id/action_newTaskFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <argument
+            android:name="task"
+            android:defaultValue="@null"
+            app:argType="com.shanemaglangit.sharetask.model.data.Task"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/taskFragment"
@@ -47,6 +52,9 @@
         <action
             android:id="@+id/action_taskFragment_to_checkboxDialogFragment"
             app:destination="@id/checkboxDialogFragment" />
+        <action
+            android:id="@+id/action_taskFragment_to_newTaskFragment"
+            app:destination="@id/newTaskFragment" />
     </fragment>
     <activity
         android:id="@+id/authenticationActivity"

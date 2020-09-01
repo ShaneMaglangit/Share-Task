@@ -77,6 +77,15 @@ class Repository @Inject constructor(
             })
     }
 
+    fun updateTask(task: Task) {
+        val taskPreview = TaskPreview.createFromTask(task)
+        dbRef.child("/task/${task.id}").setValue(task)
+
+        task.members.forEach {
+            dbRef.child("/userTask/${it.key}/${task.id}/").setValue(taskPreview)
+        }
+    }
+
     fun writeTask(task: Task) {
         task.apply {
             id = dbRef.child("/task").push().key!!
@@ -117,7 +126,7 @@ class Repository @Inject constructor(
                         Timber.i("Adding checkbox child ${checkboxList.value!!.size}")
                         checkbox.id = snapshot.key!!
                         checkboxList.value!!.add(checkbox)
-                        checkboxList.value!!.sortByDescending { it.dateCreated }
+                        checkboxList.value!!.sortBy { it.dateCreated }
                         checkboxList.notifyObserver()
                     }
                 }
@@ -127,7 +136,7 @@ class Repository @Inject constructor(
                 if (snapshot.exists()) {
                     Timber.i("Checkbox child removed")
                     checkboxList.value!!.removeAll { it.id == snapshot.key }
-                    checkboxList.value!!.sortByDescending { it.dateCreated }
+                    checkboxList.value!!.sortBy { it.dateCreated }
                     checkboxList.notifyObserver()
                 }
             }
@@ -175,6 +184,12 @@ class Repository @Inject constructor(
         val checkboxId = dbRef.child("/checkbox/${task.id}").push().key
         dbRef.child("/checkbox/${task.id}/$checkboxId").setValue(checkbox)
         updateProgressMax(task, 1)
+    }
+
+    fun updateCheckbox(task: Task, checkbox: Checkbox) {
+        Timber.i("Setting to ${checkbox.checked}")
+        dbRef.child("/checkbox/${task.id}/${checkbox.id}/checked").setValue(checkbox.checked)
+        updateProgress(task, if (checkbox.checked) 1 else -1)
     }
 
     private fun updateProgress(task: Task, increment: Int) {
@@ -229,5 +244,26 @@ class Repository @Inject constructor(
         dbRef.child("/checkbox/${task.id}/${checkbox.id}").removeValue()
         if (checkbox.checked) updateProgress(task, -1)
         updateProgressMax(task, -1)
+    }
+
+    fun removeTask(taskPreview: TaskPreview) {
+        dbRef.child("/task/${taskPreview.id}").addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val task = snapshot.getValue(Task::class.java)
+
+                    if (task != null) {
+                        task.members.forEach {
+                            dbRef.child("/userTask/${it.key}/${task.id}").removeValue()
+                            dbRef.child("/userTaskList/${it.key}/${task.id}").removeValue()
+                        }
+
+                        dbRef.child("/task/${task.id}").removeValue()
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            }
+        )
     }
 }

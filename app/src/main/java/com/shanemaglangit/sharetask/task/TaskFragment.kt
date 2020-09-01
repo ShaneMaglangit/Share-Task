@@ -62,10 +62,7 @@ class TaskFragment : Fragment() {
         binding.recyclerCheckbox.layoutManager = LinearLayoutManager(requireContext())
 
         fileAdapter = CardTextAdapter(CardTextListener {
-            checkForPermissionBeforeDownload(
-                it.first,
-                it.second
-            )
+            checkForPermissionBeforeDownload(it.first, it.second)
         })
         binding.recyclerFiles.adapter = fileAdapter
         binding.recyclerFiles.layoutManager = LinearLayoutManager(requireContext())
@@ -99,7 +96,6 @@ class TaskFragment : Fragment() {
                 viewModel.removeMember(member.first)
             }
         }).attachToRecyclerView(binding.recyclerMembers)
-
     }
 
     override fun onStart() {

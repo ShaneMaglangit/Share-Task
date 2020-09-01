@@ -134,6 +134,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/label_type"
                     android:textColor="@android:color/black"
+                    app:hasMembers="@{viewModel.task}"
                     app:layout_constraintBottom_toTopOf="@+id/radio_type"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_description" />
@@ -144,6 +145,7 @@
                     android:layout_height="match_parent"
                     android:checkedButton="@id/radio_button_personal"
                     android:orientation="horizontal"
+                    app:hasMembers="@{viewModel.task}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="checkbox"
             type="com.shanemaglangit.sharetask.model.data.Checkbox" />
+
+        <variable
+            name="checkboxListener"
+            type="com.shanemaglangit.sharetask.task.CheckboxListener" />
     </data>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp">
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:descendantFocusability="blocksDescendants"
+        android:focusable="true"
+        android:onClick="@{() -> checkboxListener.onClick(checkbox)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -39,6 +48,8 @@
                 android:layout_height="16dp"
                 android:layout_margin="4dp"
                 android:background="@drawable/selector_checkbox"
+                android:checked="@{checkbox.checked}"
+                android:onClick="@{() -> checkboxListener.onClick(checkbox)}"
                 android:textOff="@null"
                 android:textOn="@null"
                 app:layout_constraintStart_toStartOf="parent"

@@ -8,6 +8,7 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.InverseBindingAdapter
 import com.google.android.material.textfield.TextInputLayout
 import com.shanemaglangit.sharetask.R
+import com.shanemaglangit.sharetask.model.data.Task
 
 @BindingAdapter("error")
 fun setError(view: TextInputLayout, value: String?) {
@@ -52,4 +53,14 @@ fun setIconColor(view: TextView, value: Int) {
 @BindingAdapter("foregroundTint")
 fun setForegroundTintColor(view: ImageView, value: Int) {
     view.setColorFilter(value)
+}
+
+@BindingAdapter("hasMembers")
+fun setHasMembers(view: View, value: Task) {
+    if (value.members.size > 1 && value.isGroup) view.visibility = View.GONE
+}
+
+@BindingAdapter("isGrouped")
+fun setIsGrouped(view: View, value: Boolean) {
+    view.visibility = if (value) View.VISIBLE else View.GONE
 }

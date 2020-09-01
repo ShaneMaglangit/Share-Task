@@ -40,7 +40,9 @@ class TaskViewModel @AssistedInject constructor(
     val uploadFile: LiveData<Boolean>
         get() = _uploadFile
 
-    fun updateCheckbox(checkbox: Checkbox) {}
+    fun updateCheckbox(checkbox: Checkbox) {
+        repository.updateCheckbox(task.value!!, checkbox)
+    }
 
     fun promptMemberModalDialog() {
         navigate(TaskFragmentDirections.actionTaskFragmentToUserDialogFragment(task.value!!))
@@ -77,5 +79,9 @@ class TaskViewModel @AssistedInject constructor(
 
     fun completedFileRequest() {
         _uploadFile.value = false
+    }
+
+    fun navigateToEdit() {
+        navigate(TaskFragmentDirections.actionTaskFragmentToNewTaskFragment(task.value!!))
     }
 }

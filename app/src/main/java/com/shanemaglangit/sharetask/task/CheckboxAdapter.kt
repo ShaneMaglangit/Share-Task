@@ -34,6 +34,7 @@ class CheckboxAdapter(private val checkboxListener: CheckboxListener) :
 
         fun bind(item: Checkbox, checkboxListener: CheckboxListener) {
             binding.checkbox = item
+            binding.checkboxListener = checkboxListener
             binding.executePendingBindings()
         }
 
@@ -48,7 +49,10 @@ class CheckboxAdapter(private val checkboxListener: CheckboxListener) :
 }
 
 class CheckboxListener(val clickListener: (checkbox: Checkbox) -> Unit) {
-    fun onClick(checkbox: Checkbox) = clickListener(checkbox)
+    fun onClick(checkbox: Checkbox) {
+        checkbox.checked = !checkbox.checked
+        clickListener(checkbox)
+    }
 }
 
 class CheckboxDiffCallback : DiffUtil.ItemCallback<Checkbox>() {
