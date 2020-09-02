@@ -14,9 +14,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserDialogFragment : BottomSheetDialogFragment() {
+    // Binding for the layout
     private lateinit var binding: FragmentUserDialogBinding
+
+    // Navigation arguments from the previous fragment
     private val args: UserDialogFragmentArgs by navArgs()
 
+    // Repository that holds and does that data processing and tasks
     @Inject
     lateinit var repository: Repository
 
@@ -24,15 +28,23 @@ class UserDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Create the binding and inflate the layout
         binding = FragmentUserDialogBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Add a click listener when the user submits the entered text
         binding.buttonSubmit.setOnClickListener {
+            // Remove the special characters on the email
+            // This is necessary because Firebase RTDB doesn't allow special characters on keys
             val email = binding.editEmail.text!!.replace(Regex("[^A-Za-z0-9 ]"), "")
+
+            // Add the member to the repository
             repository.addMember(args.task, email)
+
+            // Navigate back to the previous fragment
             findNavController().navigateUp()
         }
     }

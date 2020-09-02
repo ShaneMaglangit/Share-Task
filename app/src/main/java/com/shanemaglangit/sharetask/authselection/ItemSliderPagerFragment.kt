@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.shanemaglangit.sharetask.databinding.FragmentItemSliderPagerBinding
+import com.shanemaglangit.sharetask.model.data.IntroItem
+
 
 class ItemSliderPagerFragment : Fragment() {
 

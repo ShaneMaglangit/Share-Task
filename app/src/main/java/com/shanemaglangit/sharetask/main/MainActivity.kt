@@ -12,9 +12,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Create binding and inflate the layout
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Attach the nav controller to the bottom nav
         val navHost = supportFragmentManager.findFragmentById(R.id.main_nav_host) as NavHostFragment
         NavigationUI.setupWithNavController(binding.bottomNavMain, navHost.navController)
     }

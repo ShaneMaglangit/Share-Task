@@ -23,19 +23,31 @@ class CardTextAdapter(private val cardTextListener: CardTextListener) :
         return ViewHolder.from(parent)
     }
 
+    /**
+     * Used to update the data under the recycler view
+     */
     override fun submitList(list: List<Pair<String, String>>?) {
         super.submitList(list)
         notifyDataSetChanged()
     }
 
+    /**
+     * Views that the recycler view uses to display its item
+     */
     class ViewHolder private constructor(val binding: CardTextItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * Binds the items to the view holder
+         */
         fun bind(item: Pair<String, String>, cardTextListener: CardTextListener) {
             binding.textTitle.text = item.second
             binding.root.setOnClickListener { cardTextListener.onClick(item) }
         }
 
+        /**
+         * Static method that is used as a form of factory method for creating a view holder instance
+         */
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -46,10 +58,16 @@ class CardTextAdapter(private val cardTextListener: CardTextListener) :
     }
 }
 
+/**
+ * Can be used by the adapter as a way to handle touch events on the view holders
+ */
 class CardTextListener(val clickListener: (mapEntry: Pair<String, String>) -> Unit) {
     fun onClick(mapEntry: Pair<String, String>) = clickListener(mapEntry)
 }
 
+/**
+ * Diffcallback that will be used by the cardtextadapter for its "recycling behavior"
+ */
 class PairDiffCallback : DiffUtil.ItemCallback<Pair<String, String>>() {
     override fun areItemsTheSame(
         oldItem: Pair<String, String>,

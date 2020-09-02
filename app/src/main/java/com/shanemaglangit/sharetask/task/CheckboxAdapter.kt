@@ -24,20 +24,32 @@ class CheckboxAdapter(private val checkboxListener: CheckboxListener) :
         return ViewHolder.from(parent)
     }
 
+    /**
+     * Used to update the data under the recycler view
+     */
     override fun submitList(list: MutableList<Checkbox>?) {
         super.submitList(list)
         notifyDataSetChanged()
     }
 
+    /**
+     * Views that the recycler view uses to display its item
+     */
     class ViewHolder private constructor(val binding: CheckboxItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * Binds the items to the view holder
+         */
         fun bind(item: Checkbox, checkboxListener: CheckboxListener) {
             binding.checkbox = item
             binding.checkboxListener = checkboxListener
             binding.executePendingBindings()
         }
 
+        /**
+         * Static method that is used as a form of factory method for creating a view holder instance
+         */
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -48,6 +60,9 @@ class CheckboxAdapter(private val checkboxListener: CheckboxListener) :
     }
 }
 
+/**
+ * Can be used by the adapter as a way to handle touch events on the view holders
+ */
 class CheckboxListener(val clickListener: (checkbox: Checkbox) -> Unit) {
     fun onClick(checkbox: Checkbox) {
         checkbox.checked = !checkbox.checked
@@ -55,6 +70,9 @@ class CheckboxListener(val clickListener: (checkbox: Checkbox) -> Unit) {
     }
 }
 
+/**
+ * Diffcallback that will be used by the checkbox adapter for its "recycling behavior"
+ */
 class CheckboxDiffCallback : DiffUtil.ItemCallback<Checkbox>() {
     override fun areItemsTheSame(oldItem: Checkbox, newItem: Checkbox): Boolean =
         oldItem.id == newItem.id

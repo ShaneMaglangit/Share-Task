@@ -22,6 +22,8 @@ class AuthenticationActivity : BaseActivity() {
         super.onStart()
         val navController = findNavController(R.id.authentication_nav_host)
 
+        // If the nav destination is pointed towards the main activity, always finish the current
+        // activity first to not allow navigating up once logged in.
         navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.mainActivity) finishAffinity()
         }

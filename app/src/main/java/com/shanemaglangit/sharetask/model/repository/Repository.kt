@@ -25,16 +25,21 @@ class Repository @Inject constructor(
     firebaseDatabase: FirebaseDatabase,
     firebaseAuth: FirebaseAuth
 ) {
+    // Details of the current user
     val userId = firebaseAuth.currentUser!!.uid
     private val userName = firebaseAuth.currentUser!!.displayName!!
+
+    // References to firebase services
     private val dbRef = firebaseDatabase.reference
     private val storageRef = firebaseStorage.reference
 
+    // Live data containing the list of task previews
     private val _taskList = MutableLiveData<MutableList<TaskPreview>>(mutableListOf())
     val taskList: LiveData<MutableList<TaskPreview>>
         get() = _taskList
 
     init {
+        // Gets the list of task previews under the user
         dbRef.child("/userTask/$userId/")
             .addChildEventListener(object : ChildEventListener {
                 override fun onCancelled(error: DatabaseError) {}
@@ -77,26 +82,43 @@ class Repository @Inject constructor(
             })
     }
 
+    /**
+     * Used to update the task
+     */
     fun updateTask(task: Task) {
         val taskPreview = TaskPreview.createFromTask(task)
+
+        // Update the main task
         dbRef.child("/task/${task.id}").setValue(task)
 
+        // Update all of the task previews
         task.members.forEach {
             dbRef.child("/userTask/${it.key}/${task.id}/").setValue(taskPreview)
         }
     }
 
+    /**
+     * Used to create a new task
+     */
     fun writeTask(task: Task) {
         task.apply {
             id = dbRef.child("/task").push().key!!
             members[userId] = userName
         }
 
+        // Update the original task
         dbRef.child("/task/${task.id}").setValue(task)
+
+        // Create a new task preview under the current user
         dbRef.child("/userTask/$userId/${task.id}").setValue(TaskPreview.createFromTask(task))
+
+        // Add the task id under the lookup for the user and its tasks
         dbRef.child("/userTaskList/$userId/${task.id}").setValue(true)
     }
 
+    /**
+     * Used to get a specific task based on the given id
+     */
     fun getTask(taskId: String): MutableLiveData<Task> {
         val task = MutableLiveData<Task>()
 
@@ -110,6 +132,9 @@ class Repository @Inject constructor(
         return task
     }
 
+    /**
+     * Used to get the list of checkbox under the current task
+     */
     fun getCheckbox(taskId: String): LiveData<MutableList<Checkbox>> {
         val checkboxList = MutableLiveData<MutableList<Checkbox>>(mutableListOf())
 
@@ -160,6 +185,9 @@ class Repository @Inject constructor(
         return checkboxList
     }
 
+    /**
+     * Used to add a new member to the task
+     */
     fun addMember(task: Task, email: String) {
         dbRef.child("/emailLookup/$email").addListenerForSingleValueEvent(
             object : ValueEventListener {
@@ -179,6 +207,9 @@ class Repository @Inject constructor(
         )
     }
 
+    /**
+     * Used to add a new checkbox to the task
+     */
     fun addCheckbox(task: Task, checkboxText: String) {
         val checkbox = Checkbox(details = checkboxText, checked = false)
         val checkboxId = dbRef.child("/checkbox/${task.id}").push().key
@@ -186,12 +217,18 @@ class Repository @Inject constructor(
         updateProgressMax(task, 1)
     }
 
+    /**
+     * Used to update the state of the checkbox
+     */
     fun updateCheckbox(task: Task, checkbox: Checkbox) {
         Timber.i("Setting to ${checkbox.checked}")
         dbRef.child("/checkbox/${task.id}/${checkbox.id}/checked").setValue(checkbox.checked)
         updateProgress(task, if (checkbox.checked) 1 else -1)
     }
 
+    /**
+     * Used to update the progress of the current task
+     */
     private fun updateProgress(task: Task, increment: Int) {
         dbRef.child("/task/${task.id}/progress").setValue(task.progress + increment)
 
@@ -201,6 +238,9 @@ class Repository @Inject constructor(
         }
     }
 
+    /**
+     * Used to update the max progress of the current task
+     */
     private fun updateProgressMax(task: Task, increment: Int) {
         dbRef.child("/task/${task.id}/progressMax").setValue(task.progressMax + increment)
 
@@ -210,6 +250,9 @@ class Repository @Inject constructor(
         }
     }
 
+    /**
+     * Used to upload a file to the storage and link it to the database
+     */
     fun uploadFile(taskId: String, fileName: String, uri: Uri) {
         val fileUid = UUID.randomUUID()
 
@@ -219,6 +262,9 @@ class Repository @Inject constructor(
             }
     }
 
+    /**
+     * Used to download a file from the storage
+     */
     fun downloadFile(fileUid: String, fileName: String) {
         storageRef.child("/$fileUid").downloadUrl
             .addOnSuccessListener {
@@ -229,23 +275,35 @@ class Repository @Inject constructor(
             }
     }
 
+    /**
+     * Used to remove a file from the storage and database
+     */
     fun removeFile(taskId: String, fileUid: String) {
         storageRef.child("/$fileUid").delete()
         dbRef.child("/task/$taskId/files/$fileUid").removeValue()
     }
 
+    /**
+     * Used to remove a member from the current task
+     */
     fun removeMember(taskId: String, userId: String) {
         dbRef.child("/task/$taskId/members/$userId").removeValue()
         dbRef.child("/userTask/$userId/$taskId").removeValue()
         dbRef.child("/userTaskList/$userId/$taskId").removeValue()
     }
 
+    /**
+     * Used to remove a checkbox
+     */
     fun removeCheckbox(task: Task, checkbox: Checkbox) {
         dbRef.child("/checkbox/${task.id}/${checkbox.id}").removeValue()
         if (checkbox.checked) updateProgress(task, -1)
         updateProgressMax(task, -1)
     }
 
+    /**
+     * Used to remove a task
+     */
     fun removeTask(taskPreview: TaskPreview) {
         dbRef.child("/task/${taskPreview.id}").addListenerForSingleValueEvent(
             object : ValueEventListener {

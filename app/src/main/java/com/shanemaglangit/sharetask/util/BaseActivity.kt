@@ -9,6 +9,10 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 
 open class BaseActivity : AppCompatActivity() {
+    /**
+     * Hides the soft keyboard whenever a touch event is detected
+     * outside of edit text views.
+     */
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         if (ev.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus

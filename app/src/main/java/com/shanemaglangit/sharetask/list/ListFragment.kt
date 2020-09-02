@@ -18,21 +18,28 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ListFragment : Fragment() {
+    // Binding for the list fragment
     private lateinit var binding: FragmentListBinding
+
+    // View model for the list fragment
     private val viewModel: ListViewModel by viewModels()
 
+    // Adapter for the list of task previews
     private lateinit var taskPreviewAdapter: TaskPreviewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Create binding and inflate the layout
         binding = FragmentListBinding.inflate(inflater)
 
+        // Create the adapter for the recycler view for task preview
         taskPreviewAdapter = TaskPreviewAdapter(TaskPreviewListener {
             findNavController().navigate(ListFragmentDirections.actionListFragmentToTaskFragment(it.id))
         })
 
+        // Set up the recycler view along with its task adapter
         binding.recyclerTasks.adapter = taskPreviewAdapter
         binding.recyclerTasks.layoutManager = LinearLayoutManager(requireContext())
 
@@ -42,6 +49,7 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Create the swipe to delete callback for the recycler view containg the task previews
         ItemTouchHelper(object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val taskPreview = taskPreviewAdapter.getItem(viewHolder.adapterPosition)
@@ -49,6 +57,7 @@ class ListFragment : Fragment() {
             }
         }).attachToRecyclerView(binding.recyclerTasks)
 
+        // A tab listener that updates the list and filters them based on the selected item
         binding.tabGroup.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -59,15 +68,18 @@ class ListFragment : Fragment() {
             }
         })
 
+        // Navigate to the fragment for creating a new task
         binding.fabAdd.setOnClickListener { viewModel.navigateToNewTask() }
     }
 
     override fun onStart() {
         super.onStart()
+        // Observes the task list live data
         viewModel.taskList.observe(viewLifecycleOwner, Observer {
             taskPreviewAdapter.submitList(it, binding.tabGroup.selectedTabPosition)
         })
 
+        // Observe the navigation direction live data and navigate accordingly
         viewModel.navigationDirection.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 findNavController().navigate(it)

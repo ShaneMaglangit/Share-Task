@@ -24,6 +24,10 @@ class TaskPreviewAdapter(private val taskPreviewListener: TaskPreviewListener) :
         return ViewHolder.from(parent)
     }
 
+
+    /**
+     * Used to update the data under the recycler view
+     */
     fun submitList(list: List<TaskPreview>?, filterButtonId: Int) {
         super.submitList(list?.filter {
             when (filterButtonId) {
@@ -34,15 +38,24 @@ class TaskPreviewAdapter(private val taskPreviewListener: TaskPreviewListener) :
         })
     }
 
+    /**
+     * Views that the recycler view uses to display its item
+     */
     class ViewHolder private constructor(val binding: TaskItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        /**
+         * Binds the items to the view holder
+         */
         fun bind(item: TaskPreview, taskPreviewListener: TaskPreviewListener) {
             binding.taskPreview = item
             binding.taskPreviewListener = taskPreviewListener
             binding.executePendingBindings()
         }
 
+        /**
+         * Static method that is used as a form of factory method for creating a view holder instance
+         */
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
@@ -53,10 +66,16 @@ class TaskPreviewAdapter(private val taskPreviewListener: TaskPreviewListener) :
     }
 }
 
+/**
+ * Can be used by the adapter as a way to handle touch events on the view holders
+ */
 class TaskPreviewListener(val clickListener: (taskPreview: TaskPreview) -> Unit) {
     fun onClick(taskPreview: TaskPreview) = clickListener(taskPreview)
 }
 
+/**
+ * Diffcallback that will be used by the task preview adapter for its "recycling behavior"
+ */
 class TaskPreviewDiffCallback : DiffUtil.ItemCallback<TaskPreview>() {
     override fun areItemsTheSame(oldItem: TaskPreview, newItem: TaskPreview): Boolean =
         oldItem.id == newItem.id

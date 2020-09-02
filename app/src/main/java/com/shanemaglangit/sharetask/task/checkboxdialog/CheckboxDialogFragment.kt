@@ -14,9 +14,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class CheckboxDialogFragment : BottomSheetDialogFragment() {
+    // Binding for the layout
     private lateinit var binding: FragmentCheckboxDialogBinding
+
+    // Navigation arguments from the previous fragment
     private val args: CheckboxDialogFragmentArgs by navArgs()
 
+    // Repository that holds and does that data processing and tasks
     @Inject
     lateinit var repository: Repository
 
@@ -24,14 +28,19 @@ class CheckboxDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Create the binding and inflate the layout
         binding = FragmentCheckboxDialogBinding.inflate(inflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Add a click listener when the user submits the entered text
         binding.buttonSubmit.setOnClickListener {
+            // Add the checkbox to the repository
             repository.addCheckbox(args.task, binding.editCheckbox.text.toString())
+
+            // Navigate back to the previous fragment
             findNavController().navigateUp()
         }
     }

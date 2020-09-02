@@ -1,4 +1,4 @@
-package com.shanemaglangit.sharetask.authselection
+package com.shanemaglangit.sharetask.model.data
 
 data class IntroItem (
     val imageId: Int,

@@ -19,11 +19,17 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class NewTaskFragment : Fragment() {
+    // View model factory for assisted injection
     @Inject
     lateinit var viewModelAssistedFactory: NewTaskViewModel.AssistedFactory
 
+    // Navigation arguments from the previous fragments
     private val args: NewTaskFragmentArgs by navArgs()
+
+    // Binding for the new task fragment
     private lateinit var binding: FragmentNewTaskBinding
+
+    // View model for the new task fragment
     private val viewModel: NewTaskViewModel by viewModels {
         NewTaskViewModel.provideFactory(viewModelAssistedFactory, args.task)
     }
@@ -32,16 +38,16 @@ class NewTaskFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Create the binding and inflate the layout
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_task, container, false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        // Add a click listener to the color selection components that shows a color picker dialog
         binding.textColor.addColorPickerDialog()
         binding.viewColorPreview.addColorPickerDialog()
     }
@@ -49,17 +55,25 @@ class NewTaskFragment : Fragment() {
     override fun onStart() {
         super.onStart()
 
+        // Listen to the navigateUp live data
         viewModel.navigateUp.observe(viewLifecycleOwner, Observer {
             if (it) {
+                // Go back to the previous fragment
                 findNavController().navigateUp()
+                // Reset the live data
                 viewModel.completedNavigateUp()
             }
         })
     }
 
+    /**
+     * An extension function for a attaching a click listener that shows a color picker dialog
+     */
     private fun View.addColorPickerDialog() {
         this.setOnClickListener {
+            // Create the color picker dialog
             ColorPickerDialog()
+                // Add color presets
                 .withPresets(
                     Color.parseColor("#55efc4"),
                     Color.parseColor("#00b894"),
@@ -80,9 +94,13 @@ class NewTaskFragment : Fragment() {
                     Color.parseColor("#dfe6e9"),
                     Color.parseColor("#2d3436")
                 )
+                // Remove alpha from the picker
                 .withAlphaEnabled(false)
+                // Add a lister to the dialog
                 .withListener { pickerView, color ->
+                    // Updates the selected color
                     viewModel.updateColor(color)
+                    // Dismiss the dialog
                     pickerView?.dismiss()
                 }
                 .show(this@NewTaskFragment.childFragmentManager, "Color Picker Dialog")

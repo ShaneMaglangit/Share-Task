@@ -10,5 +10,6 @@ abstract class SwipeToDeleteCallback : ItemTouchHelper.SimpleCallback(0, ItemTou
         target: RecyclerView.ViewHolder
     ): Boolean = false
 
+    // Sets the threshold to 70% swipe before performing the deletion.
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float = 0.7F
 }
